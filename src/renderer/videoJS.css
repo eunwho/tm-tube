@@ -420,11 +420,14 @@ body.vjs-full-window {
 .vjs-full-window .video-js.vjs-full-screen {
   position: fixed;
   overflow: hidden;
-  z-index: 1000;
+  /*  z-index: 1000;  debugjsk*/
+  z-index: 5;
   left: 0;
   top: 0;
+/*
   bottom: 0;
   right: 0;
+*/  
 }
 
 .video-js.vjs-full-screen {
@@ -450,7 +453,7 @@ body.vjs-full-window {
 }
 /* Hide button in full screen mode */
 .vjs--full-screen-enabled .vjs-button-fullwindow, .vjs--full-screen-enabled .vjs-button-theatre, .vjs-full-window .vjs-button-theatre {
-  display: none;
+  /* display: none; debugjsk */
 }
 
 .vjs-icon-fullwindow-exit, .vjs-icon-theatre-active, .video-js.vjs-fullwindow .vjs-fullwindow-control .vjs-icon-placeholder {
@@ -470,7 +473,7 @@ body.vjs-full-window {
 }
 
 .vjs-icon-theatre-inactive, .vjs-icon-theatre-active {
-  margin-top: 10px !important;
+  /*margin-top: 10px !important; jskdebug*/
 }
 
 .vjs-icon-loop-active {
@@ -517,7 +520,8 @@ body.vjs-full-window {
 .vjs-full-window .video-js.vjs-fullscreen {
   position: fixed;
   overflow: hidden;
-  z-index: 1000;
+  /*  z-index: 1000;  jskdebug */
+  z-index: -1;
   left: 0;
   top: 0;
   bottom: 0;

@@ -77,6 +77,7 @@ export default Vue.extend({
   },
   data: function () {
     return {
+      jsk_msg:"Treadmill Test Output",
       id: '',
       powerSaveBlocker: null,
       volume: 1,
@@ -116,13 +117,13 @@ export default Vue.extend({
             'seekToLive',
             'remainingTimeDisplay',
             'customControlSpacer',
-            'screenshotButton',
+//            'screenshotButton',
             'playbackRateMenuButton',
             'loopButton',
             'chaptersButton',
             'descriptionsButton',
             'subsCapsButton',
-            'pictureInPictureToggle',
+//            'pictureInPictureToggle',
             'toggleTheatreModeButton',
             'fullWindowButton',
             'qualitySelector',
@@ -132,6 +133,7 @@ export default Vue.extend({
       }
     }
   },
+
   computed: {
     usingElectron: function () {
       return this.$store.getters.getUsingElectron
@@ -290,10 +292,6 @@ export default Vue.extend({
   watch: {
     showStatsModal: function() {
       this.player.trigger(this.statsModalEventName)
-    },
-
-    enableScreenshot: function() {
-      this.toggleScreenshotButton()
     }
   },
   mounted: function () {
@@ -343,7 +341,7 @@ export default Vue.extend({
   },
   methods: {
     initializePlayer: async function () {
-      console.log(this.adaptiveFormats)
+      // console.log(this.adaptiveFormats)
       const videoPlayer = document.getElementById(this.id)
       if (videoPlayer !== null) {
         if (!this.useDash) {
@@ -464,7 +462,6 @@ export default Vue.extend({
           if (this.captionHybridList.length !== 0) {
             this.transformAndInsertCaptions()
           }
-          this.toggleScreenshotButton()
         })
 
         this.player.on('ended', () => {
@@ -851,46 +848,7 @@ export default Vue.extend({
           }
         })
       }
-
-      // TODO: Test formats to determine if HDR / 60 FPS and skip them based on
-      // User settings
       this.setDashQualityLevel(formatsToTest[0].bitrate)
-
-      // Old logic. Revert if needed
-      /* this.player.qualityLevels().levels_.sort((a, b) => {
-        if (a.height === b.height) {
-          return a.bitrate - b.bitrate
-        } else {
-          return a.height - b.height
-        }
-      }).forEach((ql, index, arr) => {
-        const height = ql.height
-        const width = ql.width
-        const quality = width < height ? width : height
-        let upperLevel = null
-
-        if (index < arr.length - 1) {
-          upperLevel = arr[index + 1]
-        }
-
-        if (this.defaultQuality === quality && upperLevel === null) {
-          this.setDashQualityLevel(height, true)
-        } else if (upperLevel !== null) {
-          const upperHeight = upperLevel.height
-          const upperWidth = upperLevel.width
-          const upperQuality = upperWidth < upperHeight ? upperWidth : upperHeight
-
-          if (this.defaultQuality >= quality && this.defaultQuality === upperQuality) {
-            this.setDashQualityLevel(height, true)
-          } else if (this.defaultQuality >= quality && this.defaultQuality < upperQuality) {
-            this.setDashQualityLevel(height)
-          }
-        } else if (index === 0 && quality > this.defaultQuality) {
-          this.setDashQualityLevel(height)
-        } else if (index === (arr.length - 1) && quality < this.defaultQuality) {
-          this.setDashQualityLevel(height)
-        }
-      }) */
     },
 
     setDashQualityLevel: function (bitrate) {
@@ -940,9 +898,7 @@ export default Vue.extend({
         this.selectedBitrate = 'auto'
         this.selectedMimeType = 'auto'
       }
-
       const qualityItems = $('.quality-item').get()
-
       $('.quality-item').removeClass('quality-selected')
 
       qualityItems.forEach((item) => {
@@ -951,85 +907,6 @@ export default Vue.extend({
           $(item).addClass('quality-selected')
         }
       })
-
-      /* if (this.selectedQuality === qualityLevel && this.using60Fps === is60Fps) {
-        return
-      }
-      let foundSelectedQuality = false
-      this.using60Fps = is60Fps
-      this.player.qualityLevels().levels_.sort((a, b) => {
-        if (a.height === b.height) {
-          return a.bitrate - b.bitrate
-        } else {
-          return a.height - b.height
-        }
-      }).forEach((ql, index, arr) => {
-        if (foundSelectedQuality) {
-          ql.enabled = false
-          ql.enabled_(false)
-        } else if (qualityLevel === 'auto') {
-          ql.enabled = true
-          ql.enabled_(true)
-        } else if (ql.height === qualityLevel) {
-          ql.enabled = true
-          ql.enabled_(true)
-          foundSelectedQuality = true
-
-          let lowerQuality
-          let higherQuality
-
-          if ((index - 1) !== -1) {
-            lowerQuality = arr[index - 1]
-          }
-
-          if ((index + 1) < arr.length) {
-            higherQuality = arr[index + 1]
-          }
-
-          if (typeof (lowerQuality) !== 'undefined' && lowerQuality.height === ql.height && lowerQuality.bitrate < ql.bitrate && !is60Fps) {
-            ql.enabled = false
-            ql.enabled_(false)
-            foundSelectedQuality = false
-          }
-
-          if (typeof (higherQuality) !== 'undefined' && higherQuality.height === ql.height && higherQuality.bitrate > ql.bitrate && is60Fps) {
-            ql.enabled = false
-            ql.enabled_(false)
-            foundSelectedQuality = false
-          }
-        } else {
-          ql.enabled = false
-          ql.enabled_(false)
-        }
-      })
-
-      let selectedQuality = qualityLevel
-
-      if (selectedQuality !== 'auto' && is60Fps) {
-        selectedQuality = selectedQuality + 'p60'
-      } else if (selectedQuality !== 'auto') {
-        selectedQuality = selectedQuality + 'p'
-      }
-
-      const qualityElement = document.getElementById('vjs-current-quality')
-      qualityElement.innerText = selectedQuality
-      this.selectedQuality = qualityLevel
-
-      const qualityItems = $('.quality-item').get()
-
-      $('.quality-item').removeClass('quality-selected')
-
-      qualityItems.forEach((item) => {
-        const qualityText = $(item).find('.vjs-menu-item-text').get(0)
-        if (qualityText.innerText === selectedQuality) {
-          $(item).addClass('quality-selected')
-        }
-      })
-
-      // const currentTime = this.player.currentTime()
-
-      // this.player.currentTime(0)
-      // this.player.currentTime(currentTime) */
     },
 
     enableDashFormat: function () {
@@ -1274,146 +1151,6 @@ export default Vue.extend({
       videojs.registerComponent('screenshotButton', screenshotButton)
     },
 
-    toggleScreenshotButton: function() {
-      const button = document.getElementById('screenshotButton')
-      if (this.enableScreenshot && this.format !== 'audio') {
-        button.classList.remove('vjs-hidden')
-      } else {
-        button.classList.add('vjs-hidden')
-      }
-    },
-
-    takeScreenshot: async function() {
-      if (!this.enableScreenshot || this.format === 'audio') {
-        return
-      }
-
-      const width = this.player.videoWidth()
-      const height = this.player.videoHeight()
-      if (width <= 0) {
-        return
-      }
-
-      // Need to set crossorigin="anonymous" for LegacyFormat on Invidious
-      // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
-      const video = document.querySelector('video')
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      canvas.getContext('2d').drawImage(video, 0, 0)
-
-      const format = this.screenshotFormat
-      const mimeType = `image/${format === 'jpg' ? 'jpeg' : format}`
-      const imageQuality = format === 'jpg' ? this.screenshotQuality / 100 : 1
-
-      let filename
-      try {
-        filename = await this.parseScreenshotCustomFileName({
-          date: new Date(Date.now()),
-          playerTime: this.player.currentTime(),
-          videoId: this.videoId
-        })
-      } catch (err) {
-        console.error(`Parse failed: ${err.message}`)
-        this.showToast({
-          message: this.$t('Screenshot Error').replace('$', err.message)
-        })
-        canvas.remove()
-        return
-      }
-
-      const dirChar = process.platform === 'win32' ? '\\' : '/'
-      let subDir = ''
-      if (filename.indexOf(dirChar) !== -1) {
-        const lastIndex = filename.lastIndexOf(dirChar)
-        subDir = filename.substring(0, lastIndex)
-        filename = filename.substring(lastIndex + 1)
-      }
-      const filenameWithExtension = `${filename}.${format}`
-
-      let dirPath
-      let filePath
-      if (this.screenshotAskPath) {
-        const wasPlaying = !this.player.paused()
-        if (wasPlaying) {
-          this.player.pause()
-        }
-
-        if (this.screenshotFolder === '' || !fs.existsSync(this.screenshotFolder)) {
-          dirPath = await this.getPicturesPath()
-        } else {
-          dirPath = this.screenshotFolder
-        }
-
-        const options = {
-          defaultPath: path.join(dirPath, filenameWithExtension),
-          filters: [
-            {
-              name: format.toUpperCase(),
-              extensions: [format]
-            }
-          ]
-        }
-
-        const response = await this.showSaveDialog({ options, useModal: true })
-        if (wasPlaying) {
-          this.player.play()
-        }
-        if (response.canceled || response.filePath === '') {
-          canvas.remove()
-          return
-        }
-
-        filePath = response.filePath
-        if (!filePath.endsWith(`.${format}`)) {
-          filePath = `${filePath}.${format}`
-        }
-
-        dirPath = path.dirname(filePath)
-        this.updateScreenshotFolderPath(dirPath)
-      } else {
-        if (this.screenshotFolder === '') {
-          dirPath = path.join(await this.getPicturesPath(), 'Freetube', subDir)
-        } else {
-          dirPath = path.join(this.screenshotFolder, subDir)
-        }
-
-        if (!fs.existsSync(dirPath)) {
-          try {
-            fs.mkdirSync(dirPath, { recursive: true })
-          } catch (err) {
-            console.error(err)
-            this.showToast({
-              message: this.$t('Screenshot Error').replace('$', err)
-            })
-            canvas.remove()
-            return
-          }
-        }
-        filePath = path.join(dirPath, filenameWithExtension)
-      }
-
-      canvas.toBlob((result) => {
-        result.arrayBuffer().then(ab => {
-          const arr = new Uint8Array(ab)
-
-          fs.writeFile(filePath, arr, (err) => {
-            if (err) {
-              console.error(err)
-              this.showToast({
-                message: this.$t('Screenshot Error').replace('$', err)
-              })
-            } else {
-              this.showToast({
-                message: this.$t('Screenshot Success').replace('$', filePath)
-              })
-            }
-          })
-        })
-      }, mimeType, imageQuality)
-      canvas.remove()
-    },
-
     createDashQualitySelector: function (levels) {
       if (levels.levels_.length === 0) {
         setTimeout(() => {
@@ -1480,19 +1217,6 @@ export default Vue.extend({
               <span class="vjs-menu-item-text" fps="${fps}" bitrate="${bitrate}">${qualityLabel}</span>
               <span class="vjs-control-text" aria-live="polite"></span>
             </li>`
-
-            // Old logic, revert if needed.
-            /* let is60Fps = false
-            if (index < array.length - 1 && array[index + 1].height === quality.height) {
-              if (array[index + 1].bitrate < quality.bitrate) {
-                is60Fps = true
-              }
-            }
-            const qualityText = is60Fps ? quality.height + 'p60' : quality.height + 'p'
-            qualityHtml = qualityHtml + `<li class="vjs-menu-item quality-item" role="menuitemradio" tabindex="-1" aria-checked="false aria-disabled="false">
-              <span class="vjs-menu-item-text">${qualityText}</span>
-              <span class="vjs-control-text" aria-live="polite"></span>
-            </li>` */
           })
           return $(button).html(
             $(beginningHtml + qualityHtml + endingHtml).attr(
@@ -1950,6 +1674,13 @@ export default Vue.extend({
             break
         }
       }
+    },
+
+    jskVideoFunc1:function(msg){
+      //document.getElementById(this.videoId).classList.add("jsk_video_1")
+      // document.getElementById(this.videoId).classList.add("fullScreenBackground")
+      console.log("test click item : ", msg)
+      // console.log("test click item : ")
     },
 
     ...mapActions([

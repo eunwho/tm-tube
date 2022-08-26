@@ -10,6 +10,7 @@ let targets
 const platform = os.platform()
 const cpus = os.cpus()
 
+/*
 if (platform === 'darwin') {
   let arch = Arch.x64
 
@@ -35,6 +36,9 @@ if (platform === 'darwin') {
 
   targets = Platform.LINUX.createTarget(['deb', 'zip', 'apk', 'rpm', 'AppImage', 'pacman'], arch)
 }
+*/
+let arch = Arch.x64
+targets = Platform.LINUX.createTarget(['deb', 'zip', 'apk', 'rpm', 'AppImage', 'pacman'], arch)
 
 const config = {
   appId: `io.freetubeapp.${name}`,
@@ -75,25 +79,6 @@ const config = {
     '!**/node_modules/video.js/dist/{alt/*,video.js}',
     '!**/node_modules/@videojs/*/src'
   ],
-  dmg: {
-    contents: [
-      {
-        path: '/Applications',
-        type: 'link',
-        x: 410,
-        y: 230,
-      },
-      {
-        type: 'file',
-        x: 130,
-        y: 230,
-      },
-    ],
-    window: {
-      height: 380,
-      width: 540,
-    }
-  },
   linux: {
     category: 'Network',
     icon: '_icons/icon.svg',
@@ -117,29 +102,7 @@ const config = {
       "libuuid1",
       "libsecret-1-0"
     ]
-  },
-  mac: {
-    category: 'public.app-category.utilities',
-    icon: '_icons/iconMac.icns',
-    target: ['dmg', 'zip'],
-    type: 'distribution',
-    extendInfo: {
-      CFBundleURLTypes: [
-        'freetube'
-      ],
-      CFBundleURLSchemes: [
-        'freetube'
-      ]
-    }
-  },
-  win: {
-    icon: '_icons/icon.ico',
-    target: ['nsis', 'zip', 'portable', 'squirrel'],
-  },
-  nsis: {
-    allowToChangeInstallationDirectory: true,
-    oneClick: false,
-  },
+  }
 }
 
 builder

@@ -1,3 +1,6 @@
+
+// sudo dmesg | grep tty
+
 import Vue from 'vue'
 import { mapActions } from 'vuex'
 import FtCard from '../ft-card/ft-card.vue'
@@ -12,8 +15,48 @@ import 'videojs-overlay/dist/videojs-overlay.css'
 import 'videojs-vtt-thumbnails-freetube'
 import 'videojs-contrib-quality-levels'
 import 'videojs-http-source-selector'
-
 import { IpcChannels } from '../../../constants'
+
+/*
+export interface InterByteTimeoutOptions extends TransformOptions{
+    interval: 100
+    maxBufferSize?:50
+}
+*/
+const {SerialPort} = require('serialport')
+
+const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
+//const { ReadlineParser } = require('@serialport/parser-readline')
+const port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 115200 })
+//const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
+//const parser = port.pipe(new InterByteTimeoutParser({ interval: 50,length:30 }))
+const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
+
+port.on('open',function(e){
+  if(e) return console.log("Error on :" + e.message)
+  console.log('serial open')
+})
+
+port.on('error',function(e){
+  console.log("Serial Error :"+e.message)
+})
+
+parser.on('data', function(data) {
+  
+  console.log('rxd : ',data.toString('utf-8'))
+})
+
+/*
+setInterval(function(){
+  port.write('9:4:001:1.000e+1', function(err) {
+    if (err) {
+      return console.log('Error on write: ', err.message)
+    }
+    console.log('message written')
+  })
+  
+},5000)
+*/
 
 export default Vue.extend({
   name: 'FtVideoPlayer',
@@ -1676,11 +1719,27 @@ export default Vue.extend({
       }
     },
 
-    jskVideoFunc1:function(msg){
+    jskVideoFunc1:function(foo){
       //document.getElementById(this.videoId).classList.add("jsk_video_1")
       // document.getElementById(this.videoId).classList.add("fullScreenBackground")
-      console.log("test click item : ", msg)
-      // console.log("test click item : ")
+      console.log("test click item : ", foo)
+     
+      let msg = '6'
+
+      switch (foo){
+        case 1: msg = '9:4:001:1.000e+1'; break
+        case 2: msg = '9:4:002:1.000e+1'; break
+        case 3: msg = '9:4:003:1.000e+1'; break
+        case 4: msg = '9:4:004:1.000e+1'; break
+        case 5: msg = '9:4:005:1.000e+1'; break
+        default: break        
+      } 
+      if(msg !=='6'){
+        port.write('9:4:001:1.000e+1', function(err) {
+          if (err) { return console.log('Error on write: ', err.message)}
+          console.log('txd : ',msg)
+        })
+      }
     },
 
     ...mapActions([

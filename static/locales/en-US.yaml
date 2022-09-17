@@ -127,8 +127,7 @@ History:
 Settings:
   # On Settings Page
   Settings: Settings
-  The app needs to restart for changes to take effect. Restart and apply change?: The
-    app needs to restart for changes to take effect. Restart and apply change?
+  The app needs to restart for changes to take effect. Restart and apply change?: The app needs to restart for changes to take effect. Restart and apply change?
   General Settings:
     General Settings: General Settings
     Check for Updates: Check for Updates
@@ -807,3 +806,30 @@ Screenshot Error: Screenshot failed. $
 
 Yes: Yes
 No: No
+
+Treadmill:
+  Settings: Settings
+  Select Run Type: Select Run Type
+  Select Run:
+    Select Run: Select One
+    TimeAndSpeed: Runing const [Speed] during Set [Time]
+    radioTimeSpeed: Run with time and speed
+
+    Interval: Interval exercise that increases muscle strength
+            by repeating interval movements, sprinting and resting.
+    IntervalBeginner: Interval Beginner
+    IntervalNormal: Interval Normal
+    IntervalPro: Interval Pro
+    ProgramRun:  It simulates a real road and runs a route that changes in speed and incline.
+    ProgramBeginner: Program Normal
+    ProgramNormal: Program Normal
+    ProgramPro: Program Pro
+  TimeSpeed:
+    Set Time: Set Time
+    Set Speed: Set Speed
+  Interval:
+    Interval Time: Interval Time
+    Interval Speed: Interval Speed
+  Program:
+    Time: Program Run Time
+    Speed: Program Run Speed

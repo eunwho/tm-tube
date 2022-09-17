@@ -6,12 +6,12 @@
     <div class="side">
       <font-awesome-icon
         class="menuIcon navIcon"
-        icon="bars"
+        icon="pen-nib"
         role="button"
         tabindex="0"
-        @click="toggleSideNav"
-        @keypress="toggleSideNav"
-      />
+        @click="navigate('treadmill')"
+        @keypress="navigate('treadmill')"
+     />
       <font-awesome-icon
         id="historyArrowBack"
         class="navBackIcon navIcon fa-arrow-left"

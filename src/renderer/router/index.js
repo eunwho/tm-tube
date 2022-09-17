@@ -14,6 +14,7 @@ import Search from '../views/Search/Search.vue'
 import Playlist from '../views/Playlist/Playlist.vue'
 import Channel from '../views/Channel/Channel.vue'
 import Watch from '../views/Watch/Watch.vue'
+import treadmill from '../views/treadmill/treadmill.vue'
 
 class CustomRouter extends Router {
   push(location) {
@@ -141,6 +142,14 @@ const router = new CustomRouter({
         icon: 'fa-home'
       },
       component: Settings
+    },
+    {
+      path: '/treadmill',
+      meta: {
+        title: 'treadmill.treadmill',
+        icon: 'pen-nib'
+      },
+      component: treadmill
     },
     {
       path: '/about',

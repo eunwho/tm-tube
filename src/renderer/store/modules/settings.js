@@ -268,7 +268,7 @@ const state = {
   screenshotQuality: 95,
   screenshotAskPath: false,
   screenshotFolderPath: '',
-  screenshotFilenamePattern: '%Y%M%D-%H%N%S'
+  screenshotFilenamePattern: '%Y%M%D-%H%N%S',
 }
 
 const stateWithSideEffects = {

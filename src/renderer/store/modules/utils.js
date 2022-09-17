@@ -109,8 +109,13 @@ const state = {
   externalPlayerNames: [],
   externalPlayerNameTranslationKeys: [],
   externalPlayerValues: [],
-  externalPlayerCmdArguments: {}
-}
+  externalPlayerCmdArguments: {},
+  runType:{
+      timeAndSpeed:{ time:20, speed:5 ,incline:0},
+      interval:{type:0, time: 20,speed:5},
+      program:{type:0,time:20,speed:5}
+    }  
+  }
 
 const getters = {
   getIsSideNavOpen () {
@@ -179,7 +184,10 @@ const getters = {
 
   getExternalPlayerCmdArguments () {
     return state.externalPlayerCmdArguments
-  }
+  },
+  getRunType() {
+    return state.runType
+  },
 }
 
 /**
@@ -1179,6 +1187,26 @@ const mutations = {
 
   setExternalPlayerCmdArguments (state, value) {
     state.externalPlayerCmdArguments = value
+  },
+  setTime_TimeAndSpeedRun(state, value) {
+    state.runType.timeAndSpeed.time= value
+  },
+  setSpeed_TimeAndSpeedRun(state, value) {
+    state.runType.timeAndSpeed.speed= value
+  },
+
+  setTime_IntervalRun(state, value) {
+    state.runType.interval.time= value
+  },
+  setSpeed_IntervalRun(state, value) {
+    state.runType.interval.speed= value
+  },
+
+  setTime_ProgramRun(state, value) {
+    state.runType.program.time= value
+  },
+  setSpeed_ProgramRun(state, value) {
+    state.runType.program.speed= value
   }
 }
 

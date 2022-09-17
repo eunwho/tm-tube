@@ -805,3 +805,27 @@ Starting download: '"$" 다운로드를 시작하는 중'
 Downloading failed: '"$"를 다운로드하는 동안 문제가 발생했습니다'
 Screenshot Error: 스크린샷이 실패했습니다. $
 Screenshot Success: 스크린샷을 "$"로 저장
+
+Treadmill:
+  Settings: 동작 설정
+  Select Run:
+    Select Run: Select One
+    TimeAndSpeed: 설정된 시간과 속도로 동작합니다.
+    radioTimeSpeed: 설정된 시간과 속도로 동작합니다.
+    Interval: 인터벌 동작 즉 전력 질주와 휴지기를 반복하여 근력을 높이는 운동입니다.
+    IntervalBeginner: 초심자용 근력 훈련 인터벌 동작을 합니다.
+    IntervalNormal: 중급자 인터벌 동작
+    IntervalPro: 상급자 인터벌 동작
+    ProgramRun: 실제 도로를 모사하여 속도와 경사도가 변경하는 경로를 달립니다.
+    ProgramBeginner: 초급자용 도로 모사 동작
+    ProgramNormal: 중급자용 야외도로 모사 동작
+    ProgramPro: 상급자용 도로모사 동작
+  TimeSpeed:
+    Set Time: 동작 시간 설정
+    Set Speed: 동작 속도 설정
+  Interval:
+    Interval Time: 인터벌 동작 시간 설정
+    Interval Speed: 인터벌 최고 속도 설정
+  Program:
+    Time: 동작 시간 설정
+    Speed: 최고 스피드 설정

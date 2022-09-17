@@ -75,6 +75,9 @@ export default Vue.extend({
     searchSettings: function () {
       return this.$store.getters.getSearchSettings
     },
+    runTypeSettings: function () {
+      return this.$store.getters.getSearchSettings
+    },
     profileList: function () {
       return this.$store.getters.getProfileList
     },

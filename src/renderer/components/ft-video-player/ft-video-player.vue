@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="relative">
     <video
       ref="video"
@@ -20,6 +21,15 @@
         :selected="source.qualityLabel === selectedDefaultQuality"
       >
     </video>
+  </div>
+      <div class="jsk-video-wrap" id="jsk-video-wrap">
+        <a href="#" @click="jskVideoFunc1(1)"><div></div></a>
+        <a href="#" @click="jskVideoFunc1(2)"><div></div></a>
+        <a href="#" @click="jskVideoFunc1(3)"><div></div></a>
+        <a href="#" @click="jskVideoFunc1(4)"><div></div></a>
+        <a href="#" @click="jskVideoFunc1(5)"><div></div></a>
+    </div>
+    <div id='jsk-video-msg'>{{jsk_msg}}</div>
   </div>
 </template>
 

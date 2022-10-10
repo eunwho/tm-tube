@@ -15,6 +15,26 @@ import 'videojs-http-source-selector'
 import { IpcChannels } from '../../../constants'
 import { sponsorBlockSkipSegments } from '../../helpers/sponsorblock'
 
+const {SerialPort} = require('serialport')
+
+const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
+const port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 115200 })
+const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
+
+port.on('open',function(e){
+  if(e) return console.log("Error on :" + e.message)
+  console.log('serial open')
+})
+
+port.on('error',function(e){
+  console.log("Serial Error :"+e.message)
+})
+
+parser.on('data', function(data) {
+  
+  console.log('rxd : ',data.toString('utf-8'))
+})
+
 export default Vue.extend({
   name: 'FtVideoPlayer',
   components: {
@@ -86,6 +106,7 @@ export default Vue.extend({
   },
   data: function () {
     return {
+      jsk_msg:"Treadmill Test Output",
       id: '',
       powerSaveBlocker: null,
       volume: 1,
@@ -1919,6 +1940,28 @@ export default Vue.extend({
             this.takeScreenshot()
             break
         }
+      }
+    },
+    jskVideoFunc1:function(foo){
+      //document.getElementById(this.videoId).classList.add("jsk_video_1")
+      // document.getElementById(this.videoId).classList.add("fullScreenBackground")
+      console.log("test click item : ", foo)
+     
+      let msg = '6'
+
+      switch (foo){
+        case 1: msg = '9:4:001:1.000e+1'; break
+        case 2: msg = '9:4:002:1.000e+1'; break
+        case 3: msg = '9:4:003:1.000e+1'; break
+        case 4: msg = '9:4:004:1.000e+1'; break
+        case 5: msg = '9:4:005:1.000e+1'; break
+        default: break        
+      } 
+      if(msg !=='6'){
+        port.write('9:4:001:1.000e+1', function(err) {
+          if (err) { return console.log('Error on write: ', err.message)}
+          console.log('txd : ',msg)
+        })
       }
     },
 

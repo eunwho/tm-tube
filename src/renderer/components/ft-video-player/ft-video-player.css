@@ -6,21 +6,101 @@
   width:100%;
 }
 
-:deep(.sponsorBlockMarker), :deep(.chapterMarker) {
+#jsk-video-msg{
+  position: fixed;
+/*  color: white; */
+  color: #fff;
+  margin: 10px;
+  width: auto;
+  hight: 40px;
+  font-size: 30px;
+
+  top:100px;
+  left:700px;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 99;
+}
+
+#jsk-video-wrap {
+  /* pointer-events: inherit; */
+  height:100%;
+  width:100%;
+  z-index: 99;
+}
+
+#jsk-video-wrap a {
   position: absolute;
-  opacity: 0.6;
+  overflow: hidden;
+  left: 0;
+  top: 0;
 }
 
-:deep(.sponsorBlockMarker) {
-  height: 100%;
-  background-color: var(--primary-color);
+#jsk-video-wrap a div{
+  background-size: cover;
 }
 
-:deep(.chapterMarker) {
-  height: 120%;
-  top: -10%;
-  width: 1%;
-  border-radius: 999px; /* make sure they are rounded properly*/
-  z-index: 2;
-  background-color: var(--accent-color);
+#jsk-video-wrap a:first-child {
+  width: 90px;
+  height: 90px;
+  background-color: red;
+  outline: 5px solid white;
+  border-radius: 100% 0 0 0;
+  opacity:0.1;
+  transform-origin: 100px 100px;
+  transform: rotate(-45deg);
+  z-index: 20;
+}
+
+#jsk-video-wrap a:nth-child(2) {
+  background-color: green;
+  width: 90px;
+  height: 90px;
+  outline: 5px solid #fff;
+  border-radius: 100% 0 0 0;
+  opacity:0.1;
+  transform-origin: 100px 100px;
+  transform: rotate(45deg);
+  z-index: 20;
+}
+
+#jsk-video-wrap a:nth-child(3) {
+  background-color: blue;
+  width: 90px;
+  height: 90px;
+  outline: 5px solid #fff;
+  border-radius: 100% 0 0 0;
+  opacity:0.1;
+  transform-origin: 100px 100px;
+  transform: rotate(135deg);
+  z-index: 20;
+}
+
+#jsk-video-wrap a:nth-child(4) {
+  background-color: orange;
+  width: 90px;
+  height: 90px;
+  outline: 5px solid #fff;
+  border-radius: 100% 0 0 0;
+  opacity:0.1;
+  transform-origin: 100px 100px;
+  transform: rotate(-135deg);
+  z-index: 20;
+}
+
+#jsk-video-wrap a:nth-child(5) {
+  background-color: black;
+  top: 55px;
+  left: 55px;
+  width: 90px;
+  height: 90px;
+  outline: 5px solid #fff;
+  border-radius: 50%;
+  opacity:0.3;
+  transform-origin: 100px 100px;
+  overflow: hidden;
+  z-index: 21;
+}
+
+#jsk-video-wrap a:hover {
+  opacity:0.5;
 }

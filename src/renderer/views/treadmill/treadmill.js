@@ -42,6 +42,37 @@ const chartData1 = [
   [19.50,  4.0, 0]
 ]
 
+function googleGrapData( params){
+      
+  var varPre    =[]
+  var varOut    =[]
+  var varReturn =[]
+
+  varReturn.push(['Time','Speed','Incline'])
+  varReturn.push(params[1])
+
+  let i = 0
+  for( const param of params ){
+    i++
+    if( i == 1 ) {
+
+    }else if ( i == 2 ){
+      varPre = param
+    } else {
+
+      varOut =[]
+      varOut.push(param[0] - 0.2)
+      varOut.push(varPre[1])
+      varOut.push(varPre[2])
+ 
+      varPre = param
+      varReturn.push(varOut)
+      varReturn.push(param)
+    }
+  }
+  return varReturn
+}
+
 export default Vue.extend({
   name: 'treadmill',
   components: {
@@ -63,6 +94,7 @@ export default Vue.extend({
       // programTable1:[],  
       chartOptions1: {
          title: 'Company Performance',
+         curveType:'function'
       },
       tmRadioValues: [
         'TimeAndSpeed',
@@ -74,7 +106,6 @@ export default Vue.extend({
   created: function () {
    
     const tmParam = this.$store.getters.getTmParameter      
-    console.log(tmParam)
 
     this.tmRunMode        = tmParam.tmRunMode
     this.tmTimeSpeedMode  = tmParam.tmTimeSpeedMode
@@ -87,25 +118,26 @@ export default Vue.extend({
       const var1 = this.$store.getter.getTmParameter
       return var1.tmRunMode
     },
+
     get_ProgramData0: function(){
-      const var1 = this.$store.getters.getTmParameter.program[0]      
-      return var1
+      const arg1 = this.$store.getters.getTmParameter.program[0]      
+      return googleGrapData(arg1)
     },
     get_ProgramData1: function(){
-      const var1 = this.$store.getters.getTmParameter.program[1]      
-      return var1
+      const arg1 = this.$store.getters.getTmParameter.program[1]      
+      return googleGrapData(arg1)
     },
     get_ProgramData2: function(){
-      const var1 = this.$store.getters.getTmParameter.program[2]      
-      return var1
+      const arg1 = this.$store.getters.getTmParameter.program[2]      
+      return googleGrapData(arg1)
     },
     get_ProgramData3: function(){
-      const var1 = this.$store.getters.getTmParameter.program[3]      
-      return var1
+      const arg1 = this.$store.getters.getTmParameter.program[3]      
+      return googleGrapData(arg1)
     },
     get_ProgramData4: function(){
-      const var1 = this.$store.getters.getTmParameter.program[4]      
-      return var1
+      const arg1 = this.$store.getters.getTmParameter.program[4]      
+      return googleGrapData(arg1)
     },
 
     getMode_TimeSpeed: function(){
@@ -165,13 +197,12 @@ export default Vue.extend({
 
   methods: {
     updateRunType: function (value) {
-      this.$store.commit('set_tmRunMode', value)
-      // console.log(value)
+    this.$store.commit('set_tmRunMode', value.target.value)
     },  
-
 //--- Time and Speed
-    updateMode_TimeAndSpeed: function (value) {
-      this.$store.commit('setMode_TimeSpeed', value)
+    updateMode_TimeSpeed: function (value) {
+      console.log("change RunMode value =", value.target.value)
+      this.$store.commit('setMode_TimeSpeed', value.target.value)
     },  
     updateTime_TimeSpeed: function (value) {
       this.$store.commit('setTime_TimeSpeed', value)
@@ -183,6 +214,10 @@ export default Vue.extend({
       this.$store.commit('setIncline_TimeSpeed', value)
     },  
 //--- interval
+    updateMode_Interval: function (value) {
+      console.log("change Interval Mode Value =", value.target.value)
+      this.$store.commit('setMode_Interval', value.target.value)
+    },  
     updateTimeLow_Interval: function (value) {
       this.$store.commit('setTimeLow_Interval', value)
     },  
@@ -190,6 +225,7 @@ export default Vue.extend({
       this.$store.commit('setTimeHigh_Interval', value)
     },  
     updateSpeedHigh_Interval: function (value) {
+      console.log(value)
       this.$store.commit('setSpeedHigh_Interval', value)
     },  
     updateIncline_Interval: function (value) {
@@ -198,7 +234,8 @@ export default Vue.extend({
 
 //--- Program    
     updateMode_Program: function (value) {
-      this.$store.commit('setMode_Program', value)
+      console.log("change RunMode value =", value.target.value)
+      //this.$store.commit('setMode_Program', value.target.value)
     },  
     updateTable_ProgramRun: function (value) {
       this.$store.commit('setTable_Program', value)

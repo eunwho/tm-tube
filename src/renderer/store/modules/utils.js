@@ -8,16 +8,16 @@ import { IpcChannels } from '../../../constants'
 
 var progRun0 = [
   ["time","Speed","Incline"],
-  [  0.0, 4, 0.0],
-  [  1.1, 6, 3.0],
-  [  3.5, 4, 0.0],
-  [  5.1, 6, 2.0],
-  [  7.5, 4, 1.0],
-  [  8.0, 6, 0.0],
-  [  9.5, 4, 2.0],
-  [ 10.0, 6, 0.0],
-  [ 13.0, 4, 2.0],
-  [ 15.0, 0, 0.0]
+  [  0.0, 4.0, 0.0],
+  [  1.1, 6.0, 3.0],
+  [  3.5, 4.0, 0.0],
+  [  5.1, 6.0, 2.0],
+  [  7.5, 4.0, 1.0],
+  [  8.0, 6.0, 0.0],
+  [  9.5, 4.0, 2.0],
+  [ 10.0, 6.0, 0.0],
+  [ 13.0, 4.0, 2.0],
+  [ 15.0, 0.0, 0.0]
 ]
 
 var progRun1 = [
@@ -1244,7 +1244,7 @@ const mutations = {
   },
   setTimeHigh_Interval(value) {
     const mode = tmParameter.tmIntervalMode
-    tmParameter.interval.tmTimeHihg[mode]= value
+    tmParameter.interval.tmTimeHigh[mode]= value
   },
   setSpeedHigh_Interval(value) {
     const mode = tmParameter.tmIntervalMode

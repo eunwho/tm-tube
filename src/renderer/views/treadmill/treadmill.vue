@@ -5,14 +5,14 @@
     <h1>{{ $t("Treadmill.Settings") }}</h1>
     <h2> {{ $t('Treadmill.Select Run.TimeAndSpeed')}} </h2>
 
-    <input id ="tmTimeSpeed" type="radio" name="tmRadioRunMode" value=0  v-model = "tmRunMode" >   
+    <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=0 v-model = "tmRunMode" >   
           {{ $t('Treadmill.Select Run.radioTimeSpeed')}}
     <div>
-        <input type="radio" name="tmRadioTimeSpeed" value = 0 v-model = "tmTimeSpeedMode" >
+        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 0 v-model = "tmTimeSpeedMode" >
             {{ $t('Treadmill.TimeSpeed.TimeSpeedBeginner')}}
-        <input type="radio" name="tmRadioTimeSpeed" value = 1 v-model = "tmTimeSpeedMode">
+        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 1 v-model = "tmTimeSpeedMode">
             {{ $t('Treadmill.TimeSpeed.TimeSpeedNormal')}}
-        <input type="radio" name="tmRadioTimeSpeed" value = 2 v-model = "tmTimeSpeedMode">
+        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 2 v-model = "tmTimeSpeedMode">
             {{ $t('Treadmill.TimeSpeed.TimeSpeedPro')}}
     </div>    
           <p></p>
@@ -45,15 +45,15 @@
     />
 
     <h2> {{ $t('Treadmill.Select Run.Interval')}} </h2>
-    <input type="radio" name="tmRadioRunMode" value=1 v-model= "tmRunMode">   
+    <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=1 v-model= "tmRunMode">   
           {{ $t('Treadmill.Select Run.Interval')}}
 
           <p></p>
-    <input type="radio" name="tmRadioInterval" value=0 v-model ="tmIntervalMode">
+    <input type="radio" name="tmRadioInterval" @click="updateMode_Interval" value=0 v-model ="tmIntervalMode">
           {{ $t('Treadmill.Interval.IntervalBeginner')}}
-    <input type="radio" name="tmRadioInterval" value=1 v-model ="tmIntervalMode">
+    <input type="radio" name="tmRadioInterval" @click="updateMode_Interval" value=1 v-model ="tmIntervalMode">
           {{ $t('Treadmill.Interval.IntervalNormal')}}
-    <input type="radio" name="tmRadioInterval" value=2 v-model ="tmIntervalMode">
+    <input type="radio" name="tmRadioInterval" @click="updateMode_Interval" value=2 v-model ="tmIntervalMode">
           {{ $t('Treadmill.Interval.IntervalPro')}}
     <GChart
       type="LineChart"
@@ -98,11 +98,11 @@
     />
 
     <h2> {{ $t('Treadmill.Program.ProgramRun')}} </h2>
-    <input type="radio" name="tmRadioRunMode" value=2 v-model="tmRunMode">   
+    <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=2 v-model="tmRunMode">   
         {{ $t('Treadmill.Program.ProgramRun')}}
     <p></p>
 
-    <input type="radio" name="tmRadioProgram" value=0 v-model="tmProgramMode">
+    <input type="radio" name="tmRadioProgram" @click="updateMode_Program" value=0 v-model="tmProgramMode">
         {{ $t('Treadmill.Program.Program 0')}}
 
     <GChart
@@ -110,28 +110,28 @@
       :data="get_ProgramData0" 
       :options="chartOptions1"
     />  
-    <input type="radio" name="tmRadioProgram" value=1 v-model="tmProgramMode">
+    <input type="radio" name="tmRadioProgram" @click="updateMode_Program" value=1 v-model="tmProgramMode">
         {{ $t('Treadmill.Program.Program 1')}}
         <GChart
       type="LineChart"
       :data="get_ProgramData1" 
       :options="chartOptions1"
     />  
-    <input type="radio" name="tmRadioProgram" value=2 v-model="tmProgramMode">
+    <input type="radio" name="tmRadioProgram" @click="updateMode_Program" value=2 v-model="tmProgramMode">
         {{ $t('Treadmill.Program.Program 2')}}
         <GChart
       type="LineChart"
       :data="get_ProgramData2" 
       :options="chartOptions1"
     />  
-    <input type="radio" name="tmRadioProgram" value=3 v-model="tmProgramMode">
+    <input type="radio" name="tmRadioProgram" @click="updateMode_Program" value=3 v-model="tmProgramMode">
         {{ $t('Treadmill.Program.Program 3')}}
       <GChart
       type="LineChart"
       :data="get_ProgramData3" 
       :options="chartOptions1"
     />  
-    <input type="radio" name="tmRadioProgram" value=4 v-model="tmProgramMode">
+    <input type="radio" name="tmRadioProgram" @click="updateMode_Program" value=4 v-model="tmProgramMode">
         {{ $t('Treadmill.Program.Program 4')}}
         <GChart
       type="LineChart"

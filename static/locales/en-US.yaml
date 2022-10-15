@@ -828,8 +828,9 @@ Treadmill:
     Set Time: Set Time
     Set Speed: Set Speed
   Interval:
-    Interval Time: Interval Time
-    Interval Speed: Interval Speed
+    Interval LowTime:  Interval Low Speed Time
+    Interval HighTime: Interval High Speed Time
+    Interval HighSpeed: Interval High Speed
   Program:
     Time: Program Run Time
     Speed: Program Run Speed

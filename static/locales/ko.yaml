@@ -820,12 +820,28 @@ Treadmill:
     ProgramBeginner: 초급자용 도로 모사 동작
     ProgramNormal: 중급자용 야외도로 모사 동작
     ProgramPro: 상급자용 도로모사 동작
-  TimeSpeed:
+  
+  TimeSpeed:   
     Set Time: 동작 시간 설정
     Set Speed: 동작 속도 설정
+    Set Incline: 기울기 설정
+    TimeSpeedBeginner : 초심자용
+    TimeSpeedNormal   : 중급자용
+    TimeSpeedPro      : 상급자용
+   
   Interval:
-    Interval Time: 인터벌 동작 시간 설정
-    Interval Speed: 인터벌 최고 속도 설정
+    Interval LowTime:   인터벌 저속 시간 설정
+    Interval HighTime:  인터벌 고속 시간 설정
+    Interval HighSpeed: 인터벌 최고 속도 설정
+    Interval Incline  : 인터벌 경사각 설정
+    IntervalBeginner : 초심자용
+    IntervalNormal   : 중급자용
+    IntervalPro      : 상급자용
+    
   Program:
-    Time: 동작 시간 설정
-    Speed: 최고 스피드 설정
+    ProgramRun : 가상 경로 달리기 
+    Program 0: 가상 경로 0
+    Program 1: 가상 경로 1
+    Program 2: 가상 경로 2
+    Program 3: 가상 경로 3
+    Program 4: 가상 경로 4

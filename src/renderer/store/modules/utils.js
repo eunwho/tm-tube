@@ -6,6 +6,89 @@ import i18n from '../../i18n/index'
 
 import { IpcChannels } from '../../../constants'
 
+var progRun0 = [
+  ["time","Speed","Incline"],
+  [  0.0, 4, 0.0],
+  [  1.1, 6, 3.0],
+  [  3.5, 4, 0.0],
+  [  5.1, 6, 2.0],
+  [  7.5, 4, 1.0],
+  [  8.0, 6, 0.0],
+  [  9.5, 4, 2.0],
+  [ 10.0, 6, 0.0],
+  [ 13.0, 4, 2.0],
+  [ 15.0, 0, 0.0]
+]
+
+var progRun1 = [
+  ["time","Speed","Incline"],
+  [  0.0, 4, 1.0],
+  [  5.0, 6, 1.0],
+  [ 10.0, 7, 1.0],
+  [ 15.0, 0, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 15.0, 4, 1.0]
+]
+
+var progRun2 = [
+  ["time","Speed","Incline"],
+  [  0.0, 4, 1.0],
+  [  5.0, 6, 1.0],
+  [ 10.0, 7, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 17.0, 4, 1.0],
+  [ 20.0, 4, 1.0],
+  [ 25.0, 4, 1.0],
+  [ 30.0, 4, 1.0],
+  [ 35.0, 4, 1.0],
+  [ 40.0, 0, 1.0]
+]
+
+var progRun3 = [
+  ["time","Speed","Incline"],
+  [  0.0, 4, 1.0],
+  [  5.0, 6, 1.0],
+  [  6.0, 7, 1.0],
+  [  8.0, 0, 1.0],
+  [ 10.0, 4, 1.0],
+  [ 15.0, 4, 1.0],
+  [ 20.0, 4, 1.0],
+  [ 25.0, 4, 1.0],
+  [ 30.0, 4, 1.0],
+  [ 35.0, 0, 1.0]
+]
+
+var progRun4 = [
+  ["time","Speed","Incline"],
+  [  0.0, 4, 1.0],
+  [  5.0, 6, 1.0],
+  [ 10.0, 7, 1.0],
+  [ 15.0, 0, 1.0],
+  [ 20.0, 4, 1.0],
+  [ 25.0, 4, 1.0],
+  [ 30.0, 4, 1.0],
+  [ 35.0, 4, 1.0],
+  [ 40.0, 4, 1.0],
+  [ 45.0, 0, 1.0]
+]
+
+var progTable=[progRun0,progRun1,progRun2,progRun3,progRun4]
+
+
+const tmParameter = {
+    tmRunMode:2,
+    tmTimeSpeedMode:1,
+    tmIntervalMode:0,
+    tmScheduleMode:3,
+    timeSpeed:{tmTime:[5,10,15], tmSpeed:[5,6,7],tmIncline:[0,1,2]},
+    interval: { tmTimeLow: [180,150,120], tmTimeHigh:[30,45,60], tmSpeedHigh:[10,12,15],tmIncline:[ 0, 1, 0]},
+    program: progTable
+}
+
 const state = {
   isSideNavOpen: false,
   sessionSearchHistory: [],
@@ -109,12 +192,7 @@ const state = {
   externalPlayerNames: [],
   externalPlayerNameTranslationKeys: [],
   externalPlayerValues: [],
-  externalPlayerCmdArguments: {},
-  runType:{
-      timeAndSpeed:{ time:20, speed:5 ,incline:0},
-      interval:{type:0, time: 20,speed:5},
-      program:{type:0,time:20,speed:5}
-    }  
+  externalPlayerCmdArguments: {}
   }
 
 const getters = {
@@ -185,8 +263,8 @@ const getters = {
   getExternalPlayerCmdArguments () {
     return state.externalPlayerCmdArguments
   },
-  getRunType() {
-    return state.runType
+  getTmParameter() {
+    return tmParameter
   },
 }
 
@@ -587,32 +665,6 @@ const actions = {
   },
 
   getYoutubeUrlInfo ({ state }, urlStr) {
-    // Returns
-    // - urlType [String] `video`, `playlist`
-    //
-    // If `urlType` is "video"
-    // - videoId [String]
-    // - timestamp [String]
-    //
-    // If `urlType` is "playlist"
-    // - playlistId [String]
-    // - query [Object]
-    //
-    // If `urlType` is "search"
-    // - searchQuery [String]
-    // - query [Object]
-    //
-    // If `urlType` is "hashtag"
-    // Nothing else
-    //
-    // If `urlType` is "channel"
-    // - channelId [String]
-    //
-    // If `urlType` is "unknown"
-    // Nothing else
-    //
-    // If `urlType` is "invalid_url"
-    // Nothing else
     const { videoId, timestamp, playlistId } = actions.getVideoParamsFromUrl(null, urlStr)
     if (videoId) {
       return {
@@ -704,33 +756,6 @@ const actions = {
           urlType: 'hashtag'
         }
       }
-      /*
-      Using RegExp named capture groups from ES2018
-      To avoid access to specific captured value broken
-
-      Channel URL (ID-based)
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/about
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/channels
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/community
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/featured
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/join
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/playlists
-      https://www.youtube.com/channel/UCfMJ2MchTSW2kWaT0kK94Yw/videos
-
-      Custom URL
-
-      https://www.youtube.com/c/YouTubeCreators
-      https://www.youtube.com/c/YouTubeCreators/about
-      etc.
-
-      Legacy Username URL
-
-      https://www.youtube.com/user/ufoludek
-      https://www.youtube.com/user/ufoludek/about
-      etc.
-
-      */
       case 'channel': {
         const match = url.pathname.match(channelPattern)
         const channelId = match.groups.channelId
@@ -1188,29 +1213,59 @@ const mutations = {
   setExternalPlayerCmdArguments (state, value) {
     state.externalPlayerCmdArguments = value
   },
-  setTime_TimeAndSpeedRun(state, value) {
-    state.runType.timeAndSpeed.time= value
-  },
-  setSpeed_TimeAndSpeedRun(state, value) {
-    state.runType.timeAndSpeed.speed= value
+
+//--- Tm run parameter edit
+  set_tmRunMode(tmParameter, value) {
+    tmParameter.tmRunMode = value
   },
 
-  setTime_IntervalRun(state, value) {
-    state.runType.interval.time= value
+  setMode_TimeSpeed(tmParameter, value) {
+    tmParameter.tmTimeSpeedMode = value
   },
-  setSpeed_IntervalRun(state, value) {
-    state.runType.interval.speed= value
+  setTime_TimeSpeed(value) {
+    const mode=tmParameter.tmTimeSpeedMode
+    tmParameter.timeSpeed.tmTime[mode] = value
+  },
+  setSpeed_TimeSpeed(value) {
+    const mode = tmParameter.tmTimeSpeedMode 
+    tmParameter.timeSpeed.tmSpeed[mode]= value
+  },
+  setIncline_TimeSpeed(value) {
+    const mode = tmParameter.tmTimeSpeedMode 
+    tmParameter.timeSpeed.tmIncline[mode] = value
   },
 
-  setTime_ProgramRun(state, value) {
-    state.runType.program.time= value
+  setMode_Interval(value) {
+    tmParameter.tmIntervalMode = value
   },
-  setSpeed_ProgramRun(state, value) {
-    state.runType.program.speed= value
+  setTimeLow_Interval(value) {
+    const mode = tmParameter.tmIntervalMode
+    tmParameter.interval.tmTimeLow[mode]= value
+  },
+  setTimeHigh_Interval(value) {
+    const mode = tmParameter.tmIntervalMode
+    tmParameter.interval.tmTimeHihg[mode]= value
+  },
+  setSpeedHigh_Interval(value) {
+    const mode = tmParameter.tmIntervalMode
+    tmParameter.interval.tmSpeedHigh[mode]= value
+  },
+  setIncline_Interval(value) {
+    const mode = tmParameter.tmIntervalMode
+    tmParameter.interval.tmIncline[mode]= value
+  },
+
+  setMode_Program(value) {
+    tmParameter.tmScheduleMode = value
+  },
+  setTable_Program(value) {
+    const mode = tmParameter.tmScheduleMode
+    tmParameter.program.tmSchedule[mode]= value
   }
 }
 
 export default {
+  tmParameter,
   state,
   getters,
   actions,

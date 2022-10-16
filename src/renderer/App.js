@@ -165,7 +165,7 @@ export default Vue.extend({
         this.grabAllPlaylists()
 
         if (this.usingElectron) {
-          console.log('User is using Electron')
+//          console.log('User is using Electron')
           ipcRenderer = require('electron').ipcRenderer
           this.setupListenersToSyncWindows()
           this.activateKeyboardShortcuts()
@@ -200,14 +200,15 @@ export default Vue.extend({
     },
 
     updateTheme: function (theme) {
-      console.group('updateTheme')
-      console.log('Theme: ', theme)
+//      console.group('updateTheme')
+//      console.log('Theme: ', theme)
       document.body.className = `${theme.baseTheme} main${theme.mainColor} sec${theme.secColor}`
       document.body.dataset.systemTheme = this.systemTheme
-      console.groupEnd()
+//      console.groupEnd()
     },
 
     checkForNewUpdates: function () {
+/*      
       if (this.checkForUpdates) {
         const { version } = require('../../package.json')
         const requestUrl = 'https://api.github.com/repos/freetubeapp/freetube/releases?per_page=1'
@@ -238,10 +239,11 @@ export default Vue.extend({
           console.log(error)
         })
       }
+*/
     },
 
     checkForNewBlogPosts: function () {
-      if (this.checkForBlogPosts) {
+/*      if (this.checkForBlogPosts) {
         const parser = new Parser()
         const feedUrl = 'https://write.as/freetube/feed/'
         let lastAppWasRunning = localStorage.getItem('lastAppWasRunning')
@@ -264,6 +266,7 @@ export default Vue.extend({
           localStorage.setItem('lastAppWasRunning', new Date())
         })
       }
+*/
     },
 
     checkExternalPlayer: async function () {

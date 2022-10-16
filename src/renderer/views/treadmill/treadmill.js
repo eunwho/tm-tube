@@ -4,9 +4,19 @@ import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import FtSlider from '../../components/ft-slider/ft-slider.vue'
 import FtToggleSwitch from '../../components/ft-toggle-switch/ft-toggle-switch.vue'
 import FtRadioButton from '../../components/ft-radio-button/ft-radio-button.vue'
-import {tmParameter} from '../../store/modules/utils.js'
+//import {tmParameter} from '../../store/modules/utils.js'
+import fs from 'fs'
+import path from 'path'
 
 import {GChart} from 'vue-google-charts/legacy'
+
+const fileLocation = './eunwhoPE.json.bk'
+const fileLocation1 = './eunwhoPE.json'
+
+const tmParam = JSON.parse(fs.readFileSync(fileLocation1))
+
+const testJsk = JSON.parse(fs.readFileSync(fileLocation))
+console.log(testJsk)
 
 const chartData1 = [
   [ "time", "Speed","Incline"],
@@ -55,11 +65,8 @@ function googleGrapData( params){
   for( const param of params ){
     i++
     if( i == 1 ) {
-
-    }else if ( i == 2 ){
       varPre = param
     } else {
-
       varOut =[]
       varOut.push(param[0] - 0.2)
       varOut.push(varPre[1])
@@ -85,160 +92,198 @@ export default Vue.extend({
   },
   data: function () {
     return {
-//      tmParam:[],
-      tmRunMode:        '',
-      tmTimeSpeedMode:  '',
-      tmIntervalMode:   '',
-      tmProgramMode:    '',
-      tmIntervalData1: chartData1,
-      // programTable1:[],  
+
+      tmRunMode:        tmParam.tmRunMode,
+      tmTimeSpeedMode:  tmParam.tmTimeSpeedMode,
+      tmIntervalMode:   tmParam.tmIntervalMode,
+      tmProgramMode:    tmParam.tmProgramNode,
+/*
+      tmRunMode:        0,
+      tmTimeSpeedMode:  0,
+      tmIntervalMode:   0,
+      tmProgramMode:    0,
+*/      tmIntervalData1:  chartData1,
       chartOptions1: {
-         title: 'Company Performance',
+         title: 'Eunwho Power TMI Course',
          curveType:'function'
-      },
-      tmRadioValues: [
-        'TimeAndSpeed',
-        'IntervalNormal',
-        'ProgramNormal'
-      ]
+      }
     }   
   }, 
-  created: function () {
-   
-    const tmParam = this.$store.getters.getTmParameter      
-
-    this.tmRunMode        = tmParam.tmRunMode
-    this.tmTimeSpeedMode  = tmParam.tmTimeSpeedMode
-    this.tmIntervalMode   = tmParam.tmIntervalMode    
-    this.tmProgramMode    = tmParam.tmScheduleMode    
-  },
-
   computed: {
     getMode_Run: function(){
-      const var1 = this.$store.getter.getTmParameter
-      return var1.tmRunMode
+      return tmParam.tmRunMode
     },
 
     get_ProgramData0: function(){
-      const arg1 = this.$store.getters.getTmParameter.program[0]      
+      const arg1 = tmParam.program.program0      
       return googleGrapData(arg1)
     },
     get_ProgramData1: function(){
-      const arg1 = this.$store.getters.getTmParameter.program[1]      
+      const arg1 = tmParam.program.program1      
       return googleGrapData(arg1)
     },
     get_ProgramData2: function(){
-      const arg1 = this.$store.getters.getTmParameter.program[2]      
+      const arg1 = tmParam.program.program2      
       return googleGrapData(arg1)
     },
     get_ProgramData3: function(){
-      const arg1 = this.$store.getters.getTmParameter.program[3]      
+      const arg1 = tmParam.program.program3      
       return googleGrapData(arg1)
     },
     get_ProgramData4: function(){
-      const arg1 = this.$store.getters.getTmParameter.program[4]      
+      const arg1 = tmParam.program.program4      
       return googleGrapData(arg1)
     },
 
     getMode_TimeSpeed: function(){
-      const var1 = this.$store.getter.getTmParameter
-      return var1.tmTimeSpeedMode
+      return tmParam.tmTimeSpeedMode
     },
- 
-    getTime_TimeSpeed: function () {
-      const mode = this.$store.getters.getTmParameter.tmTimeSpeedMode
-      const var1 = this.$store.getters.getTmParameter      
-      return var1.timeSpeed.tmTime[mode]
+//--- Time Speed Beginner 
+    getTime_TimeSpeed_Beginner: function () {
+      return tmParam.timeSpeed.tmTime[0]
     },
-    getSpeed_TimeSpeed: function () {
-      const mode = this.$store.getters.getTmParameter.tmTimeSpeedMode
-      const var1 = this.$store.getters.getTmParameter
-      return var1.timeSpeed.tmSpeed[mode]
+    getSpeed_TimeSpeed_Beginner: function () {
+      return tmParam.timeSpeed.tmSpeed[0]
     },    
-    getIncline_TimeSpeed: function () {
-      const mode = this.$store.getters.getTmParameter.tmTimeSpeedMode
-      const var1 = this.$store.getters.getTmParameter
-      return var1.timeSpeed.tmIncline[mode]
+    getIncline_TimeSpeed_Beginner: function () {
+      return tmParam.timeSpeed.tmIncline[0]
+    },
+//--- timespeed Normal
+    getTime_TimeSpeed_Normal: function () {
+      return tmParam.timeSpeed.tmTime[1]
+    },
+    getSpeed_TimeSpeed_Normal: function () {
+      return tmParam.timeSpeed.tmSpeed[1]
+    },    
+    getIncline_TimeSpeed_Normal: function () {
+      return tmParam.timeSpeed.tmIncline[1]
+    },
+//--- time Speed Pro
+    getTime_TimeSpeed_Pro: function () {
+      return tmParam.timeSpeed.tmTime[2]
+    },
+    getSpeed_TimeSpeed_Pro: function () {
+      return tmParam.timeSpeed.tmSpeed[2]
+    },    
+    getIncline_TimeSpeed_Pro: function () {
+      return tmParam.timeSpeed.tmIncline[2]
     },
 
 //--- get Interval parameter
+
     getMode_Interval: function () {
-      return this.$store.getters.getTmParameter.tmIntervalMode
+      return tmParam.tmIntervalMode
     },
     getTimeLow_Interval: function () {
-      const mode = this.$store.getters.getTmParameter.tmIntervalMode
-      return this.$store.getters.getTmParameter.interval.tmTimeLow[mode]
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmTimeLow[mode]
     },
     getTimeHigh_Interval: function () {
-      const mode = this.$store.getters.getTmParameter.tmIntervalMode
-      return this.$store.getters.getTmParameter.interval.tmTimeHigh[mode]
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmTimeHigh[mode]
+    },
+    getSpeedLow_Interval: function () {
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmSpeedLow[mode]
     },
     getSpeedHigh_Interval: function () {
-      const mode = this.$store.getters.getTmParameter.tmIntervalMode
-      return this.$store.getters.getTmParameter.interval.tmSpeedHigh[mode]
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmSpeedHigh[mode]
     },
-    getIncline_Interval: function () {
-      const mode = this.$store.getters.getTmParameter.tmIntervalMode
-      return this.$store.getters.getTmParameter.interval.tmIncline[mode]
+    getInclineHigh_Interval: function () {
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmInclineHigh[mode]
     },
-
-    getMode_Program: function () {
-      return this.$store.getters.getTmParameter.tmScheduleMode
-    },
-
-    tmRadioLabeles: function () {
-      return[
-        this.$t('Treadmill.Select Run.TimeAndSpeed'),
-        this.$t('Treadmill.Select Run.IntervalNormal'),
-        this.$t('Treadmill.Select Run.ProgramNormal'),
-      ]
+    getInclineLow_Interval: function () {
+      const mode = tmParam.tmIntervalMode
+      return tmParam.interval.tmInclineLow[mode]
     }
   },  
-
   methods: {
-    updateRunType: function (value) {
-    this.$store.commit('set_tmRunMode', value.target.value)
+    updateRunType: function (arg1) {
+      tmParam.tmRunMode = arg1.target.value * 1.0
     },  
 //--- Time and Speed
-    updateMode_TimeSpeed: function (value) {
-      console.log("change RunMode value =", value.target.value)
-      this.$store.commit('setMode_TimeSpeed', value.target.value)
+    updateMode_TimeSpeed: function (arg1) {
+      tmParam.tmTimeSpeedMode = arg1.target.value * 1.0
     },  
-    updateTime_TimeSpeed: function (value) {
-      this.$store.commit('setTime_TimeSpeed', value)
+    updateTime_TimeSpeed_Beginner: function (arg1) {
+      tmParam.timeSpeed.tmTime[0] = arg1
     },  
-    updateSpeed_TimeSpeed: function (value) {
-      this.$store.commit('setSpeed_TimeSpeed', value)
+    updateSpeed_TimeSpeed_Beginner: function (arg1) {
+      tmParam.timeSpeed.tmSpeed[0] = arg1
     },  
-    updateIncline_TimeSpeed: function (value) {
-      this.$store.commit('setIncline_TimeSpeed', value)
+    updateIncline_TimeSpeed_Beginner: function (arg1) {
+      tmParam.timeSpeed.tmIncline[0] = arg1
+    },  
+//--- TimeSpeed Normal
+    updateTime_TimeSpeed_Normal: function (arg1) {
+      tmParam.timeSpeed.tmTime[1] = arg1
+    },  
+    updateSpeed_TimeSpeed_Normal: function (arg1) {
+      tmParam.timeSpeed.tmSpeed[1] = arg1
+    },  
+    updateIncline_TimeSpeed_Normal: function (arg1) {
+      tmParam.timeSpeed.tmIncline[1] = arg1
+    },  
+//---
+    updateTime_TimeSpeed_Pro: function (arg1) {
+      tmParam.timeSpeed.tmTime[2] = arg1
+    },  
+    updateSpeed_TimeSpeed_Pro: function (arg1) {
+      tmParam.timeSpeed.tmSpeed[2] = arg1
+    },  
+    updateIncline_TimeSpeed_Pro: function (arg1) {
+      tmParam.timeSpeed.tmIncline[mode] = arg1
     },  
 //--- interval
-    updateMode_Interval: function (value) {
-      console.log("change Interval Mode Value =", value.target.value)
-      this.$store.commit('setMode_Interval', value.target.value)
+    updateMode_Interval: function (arg1) {
+      tmParam.tmIntervalMode = arg1.target.value * 1.0
     },  
-    updateTimeLow_Interval: function (value) {
-      this.$store.commit('setTimeLow_Interval', value)
+    updateTimeLow_Interval: function (arg1) {
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmTimeLow[mode] = arg1
     },  
-    updateTimeHigh_Interval: function (value) {
-      this.$store.commit('setTimeHigh_Interval', value)
+    updateTimeHigh_Interval: function (arg1) {
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmTimeHigh[mode] = arg1
     },  
-    updateSpeedHigh_Interval: function (value) {
-      console.log(value)
-      this.$store.commit('setSpeedHigh_Interval', value)
+    updateSpeedHigh_Interval: function (arg1){
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmSpeedHigh[mode] = arg1
     },  
-    updateIncline_Interval: function (value) {
-      this.$store.commit('setIncline_Interval', value)
+    updateInclineHigh_Interval: function (arg1) {
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmInclineHigh[mode] = arg1
+    },  
+    updateInclineLow_Interval: function (arg1) {
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmInclineLow[mode] = arg1
     },  
 
 //--- Program    
-    updateMode_Program: function (value) {
-      console.log("change RunMode value =", value.target.value)
-      //this.$store.commit('setMode_Program', value.target.value)
+    updateMode_Program: function (arg1) {
+      tmParam.tmScheduleMode = arg1.target.value * 1.0
     },  
-    updateTable_ProgramRun: function (value) {
-      this.$store.commit('setTable_Program', value)
+    updateTable_ProgramRun: function (arg1) {
+      const mode = tmParam.tmScheduleMode
+      switch(mode){
+        case 0: 
+          tmParam.program.program0 = arg1
+          break
+        case 1: 
+          tmParam.program.program1 = arg1
+          break
+        case 2: 
+          tmParam.program.program2 = arg1
+          break
+        case 3: 
+          tmParam.program.program3 = arg1
+          break
+        case 4: 
+          tmParam.program.program4 = arg1
+          break
+      }
     }  
   }
 })

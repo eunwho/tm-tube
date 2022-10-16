@@ -6,88 +6,6 @@ import i18n from '../../i18n/index'
 
 import { IpcChannels } from '../../../constants'
 
-var progRun0 = [
-  ["time","Speed","Incline"],
-  [  0.0, 4.0, 0.0],
-  [  1.1, 6.0, 3.0],
-  [  3.5, 4.0, 0.0],
-  [  5.1, 6.0, 2.0],
-  [  7.5, 4.0, 1.0],
-  [  8.0, 6.0, 0.0],
-  [  9.5, 4.0, 2.0],
-  [ 10.0, 6.0, 0.0],
-  [ 13.0, 4.0, 2.0],
-  [ 15.0, 0.0, 0.0]
-]
-
-var progRun1 = [
-  ["time","Speed","Incline"],
-  [  0.0, 4, 1.0],
-  [  5.0, 6, 1.0],
-  [ 10.0, 7, 1.0],
-  [ 15.0, 0, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 15.0, 4, 1.0]
-]
-
-var progRun2 = [
-  ["time","Speed","Incline"],
-  [  0.0, 4, 1.0],
-  [  5.0, 6, 1.0],
-  [ 10.0, 7, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 17.0, 4, 1.0],
-  [ 20.0, 4, 1.0],
-  [ 25.0, 4, 1.0],
-  [ 30.0, 4, 1.0],
-  [ 35.0, 4, 1.0],
-  [ 40.0, 0, 1.0]
-]
-
-var progRun3 = [
-  ["time","Speed","Incline"],
-  [  0.0, 4, 1.0],
-  [  5.0, 6, 1.0],
-  [  6.0, 7, 1.0],
-  [  8.0, 0, 1.0],
-  [ 10.0, 4, 1.0],
-  [ 15.0, 4, 1.0],
-  [ 20.0, 4, 1.0],
-  [ 25.0, 4, 1.0],
-  [ 30.0, 4, 1.0],
-  [ 35.0, 0, 1.0]
-]
-
-var progRun4 = [
-  ["time","Speed","Incline"],
-  [  0.0, 4, 1.0],
-  [  5.0, 6, 1.0],
-  [ 10.0, 7, 1.0],
-  [ 15.0, 0, 1.0],
-  [ 20.0, 4, 1.0],
-  [ 25.0, 4, 1.0],
-  [ 30.0, 4, 1.0],
-  [ 35.0, 4, 1.0],
-  [ 40.0, 4, 1.0],
-  [ 45.0, 0, 1.0]
-]
-
-var progTable=[progRun0,progRun1,progRun2,progRun3,progRun4]
-
-
-const tmParameter = {
-    tmRunMode:2,
-    tmTimeSpeedMode:1,
-    tmIntervalMode:0,
-    tmScheduleMode:3,
-    timeSpeed:{tmTime:[5,10,15], tmSpeed:[5,6,7],tmIncline:[0,1,2]},
-    interval: { tmTimeLow: [180,150,120], tmTimeHigh:[30,45,60], tmSpeedHigh:[10,12,15],tmIncline:[ 0, 1, 0]},
-    program: progTable
-}
 
 const state = {
   isSideNavOpen: false,
@@ -262,10 +180,7 @@ const getters = {
 
   getExternalPlayerCmdArguments () {
     return state.externalPlayerCmdArguments
-  },
-  getTmParameter() {
-    return tmParameter
-  },
+  }
 }
 
 /**
@@ -1212,60 +1127,21 @@ const mutations = {
 
   setExternalPlayerCmdArguments (state, value) {
     state.externalPlayerCmdArguments = value
-  },
-
-//--- Tm run parameter edit
-  set_tmRunMode(tmParameter, value) {
-    tmParameter.tmRunMode = value
-  },
-
-  setMode_TimeSpeed(tmParameter, value) {
-    tmParameter.tmTimeSpeedMode = value
-  },
-  setTime_TimeSpeed(value) {
-    const mode=tmParameter.tmTimeSpeedMode
-    tmParameter.timeSpeed.tmTime[mode] = value
-  },
-  setSpeed_TimeSpeed(value) {
-    const mode = tmParameter.tmTimeSpeedMode 
-    tmParameter.timeSpeed.tmSpeed[mode]= value
-  },
-  setIncline_TimeSpeed(value) {
-    const mode = tmParameter.tmTimeSpeedMode 
-    tmParameter.timeSpeed.tmIncline[mode] = value
-  },
-
-  setMode_Interval(value) {
-    tmParameter.tmIntervalMode = value
-  },
-  setTimeLow_Interval(value) {
-    const mode = tmParameter.tmIntervalMode
-    tmParameter.interval.tmTimeLow[mode]= value
-  },
-  setTimeHigh_Interval(value) {
-    const mode = tmParameter.tmIntervalMode
-    tmParameter.interval.tmTimeHigh[mode]= value
-  },
-  setSpeedHigh_Interval(value) {
-    const mode = tmParameter.tmIntervalMode
-    tmParameter.interval.tmSpeedHigh[mode]= value
-  },
-  setIncline_Interval(value) {
-    const mode = tmParameter.tmIntervalMode
-    tmParameter.interval.tmIncline[mode]= value
-  },
-
-  setMode_Program(value) {
-    tmParameter.tmScheduleMode = value
-  },
-  setTable_Program(value) {
-    const mode = tmParameter.tmScheduleMode
-    tmParameter.program.tmSchedule[mode]= value
   }
+/*
+  setMode_Run(arg1) {
+    console.log("tmParameter=",tmParameter,"value=",arg1)
+    // tmParameter.tmRunMode = arg2
+  },
+
+  setMode_TimeSpeed(value) {
+    tmParameter.tmTimeSpeedMode = value
+    console.log("tmParameter=",tmParameter,"value=",value)
+  },
+*/  
 }
 
 export default {
-  tmParameter,
   state,
   getters,
   actions,

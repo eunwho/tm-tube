@@ -10,40 +10,99 @@
     <div>
         <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 0 v-model = "tmTimeSpeedMode" >
             {{ $t('Treadmill.TimeSpeed.TimeSpeedBeginner')}}
-        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 1 v-model = "tmTimeSpeedMode">
-            {{ $t('Treadmill.TimeSpeed.TimeSpeedNormal')}}
-        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 2 v-model = "tmTimeSpeedMode">
-            {{ $t('Treadmill.TimeSpeed.TimeSpeedPro')}}
-    </div>    
           <p></p>
+          <ft-slider
+              :label="$t('Treadmill.TimeSpeed.Set Time Beginner')"
+              :default-value="getTime_TimeSpeed_Beginner"
+              :min-value="5"
+              :max-value="90"
+              :step="5"
+              value-extension="min"
+              @change="updateTime_TimeSpeed_Beginner"
+          />
+          <ft-slider
+              :label="$t('Treadmill.TimeSpeed.Set Speed Beginner')"
+              :default-value="getSpeed_TimeSpeed_Beginner"
+              :min-value="1"
+              :max-value="20"
+              :step="1"
+              value-extension="km/hour"
+              @change="updateSpeed_TimeSpeed_Beginner"
+          />
+          <ft-slider
+              :label="$t('Treadmill.TimeSpeed.Set Incline Beginner')"
+              :default-value="getIncline_TimeSpeed_Beginner"
+              :min-value="0"
+              :max-value="5"
+              :step="1"
+              value-extension='°'
+              @change="updateIncline_TimeSpeed_Beginner"
+          />
+    </div>    
+    <div>
+    <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 1 v-model = "tmTimeSpeedMode">
+            {{ $t('Treadmill.TimeSpeed.TimeSpeedNormal')}}
+    <p></p>
     <ft-slider
-        :label="$t('Treadmill.TimeSpeed.Set Time')"
-        :default-value="getTime_TimeSpeed"
+        :label="$t('Treadmill.TimeSpeed.Set Time Normal')"
+        :default-value="getTime_TimeSpeed_Normal"
         :min-value="5"
         :max-value="90"
         :step="5"
         value-extension="min"
-        @change="updateTime_TimeSpeed"
+        @change="updateTime_TimeSpeed_Normal"
     />
     <ft-slider
-        :label="$t('Treadmill.TimeSpeed.Set Speed')"
-        :default-value="getSpeed_TimeSpeed"
+        :label="$t('Treadmill.TimeSpeed.Set Speed Normal')"
+        :default-value="getSpeed_TimeSpeed_Normal"
         :min-value="1"
         :max-value="20"
         :step="1"
         value-extension="km/hour"
-        @change="updateSpeed_TimeSpeed"
+        @change="updateSpeed_TimeSpeed_Normal"
     />
     <ft-slider
-        :label="$t('Treadmill.TimeSpeed.Set Incline')"
-        :default-value="getIncline_TimeSpeed"
+        :label="$t('Treadmill.TimeSpeed.Set Incline Normal')"
+        :default-value="getIncline_TimeSpeed_Normal"
         :min-value="0"
         :max-value="5"
         :step="1"
         value-extension='°'
-        @change="updateIncline_TimeSpeed"
+        @change="updateIncline_TimeSpeed_Normal"
     />
-
+    </div>
+    <div>
+        <input type="radio" name="tmRadioTimeSpeed" @click="updateMode_TimeSpeed" value = 2 v-model = "tmTimeSpeedMode">
+            {{ $t('Treadmill.TimeSpeed.TimeSpeedPro')}}
+          <p></p>
+        <ft-slider
+            :label="$t('Treadmill.TimeSpeed.Set Time Pro')"
+            :default-value="getTime_TimeSpeed_Pro"
+            :min-value="5"
+            :max-value="90"
+            :step="5"
+            value-extension="min"
+            @change="updateTime_TimeSpeed_Pro"
+        />
+        <ft-slider
+            :label="$t('Treadmill.TimeSpeed.Set Speed Pro')"
+            :default-value="getSpeed_TimeSpeed_Pro"
+            :min-value="1"
+            :max-value="20"
+            :step="1"
+            value-extension="km/hour"
+            @change="updateSpeed_TimeSpeed_Pro"
+        />
+        <ft-slider
+            :label="$t('Treadmill.TimeSpeed.Set Incline Pro')"
+            :default-value="getIncline_TimeSpeed_Pro"
+            :min-value="0"
+            :max-value="5"
+            :step="1"
+            value-extension='°'
+            @change="updateIncline_TimeSpeed_Pro"
+        />
+    </div>
     <h2> {{ $t('Treadmill.Select Run.Interval')}} </h2>
     <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=1 v-model= "tmRunMode">   
           {{ $t('Treadmill.Select Run.Interval')}}
@@ -79,6 +138,15 @@
         @change="updateTimeHigh_Interval"
     />
     <ft-slider
+        :label="$t('Treadmill.Interval.Interval LowSpeed')"
+        :default-value="getSpeedLow_Interval"
+        :min-value="4"
+        :max-value="15"
+        :step="1"
+        value-extension="(km/hour)"
+        @change="updateSpeedLow_Interval"
+    />
+    <ft-slider
         :label="$t('Treadmill.Interval.Interval HighSpeed')"
         :default-value="getSpeedHigh_Interval"
         :min-value="10"
@@ -88,14 +156,25 @@
         @change="updateSpeedHigh_Interval"
     />
     <ft-slider
-        :label="$t('Treadmill.Interval.Interval Incline')"
-        :default-value="getIncline_Interval"
+        :label="$t('Treadmill.Interval.Interval LowIncline')"
+        :default-value="getInclineLow_Interval"
         :min-value="10"
         :max-value="20"
         :step="1"
         value-extension='°'
-        @change="updateIncline_Interval"
+        @change="updateInclineLow_Interval"
     />
+
+    <ft-slider
+        :label="$t('Treadmill.Interval.Interval HighIncline')"
+        :default-value="getInclineHigh_Interval"
+        :min-value="10"
+        :max-value="20"
+        :step="1"
+        value-extension='°'
+        @change="updateInclineHigh_Interval"
+    />
+
 
     <h2> {{ $t('Treadmill.Program.ProgramRun')}} </h2>
     <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=2 v-model="tmRunMode">   

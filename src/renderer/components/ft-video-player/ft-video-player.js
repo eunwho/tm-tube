@@ -17,17 +17,38 @@ import 'videojs-contrib-quality-levels'
 import 'videojs-http-source-selector'
 import { IpcChannels } from '../../../constants'
 
+import stopwatch from '../stopwatch/stopwatch.vue'
+import {GChart} from 'vue-google-charts/legacy'
+
 /*
 export interface InterByteTimeoutOptions extends TransformOptions{
     interval: 100
     maxBufferSize?:50
 }
 */
+/*
+var gaugeOptionSpeed={id:'gauge3',width:400,height:300,unit:'[km/hour]',title:'Speed',min:0,max:25,
+   mTick:[0,5,10,15,20,25],
+   alarm:i25AlarmColor
+}
+*/
+var gaugeOptionSpeed={
+  min:0,
+  max:20,
+  width:250,
+  height:250,
+  redFrom:15,
+  redTo:20,
+  greenFrom:10,
+  greenTo:15,
+  minorTicks:5
+}
+ 
 const {SerialPort} = require('serialport')
 
 const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
 //const { ReadlineParser } = require('@serialport/parser-readline')
-const port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 115200 })
+const port = new SerialPort({ path: '/dev/ttyUSB2', baudRate: 115200 })
 //const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 //const parser = port.pipe(new InterByteTimeoutParser({ interval: 50,length:30 }))
 const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
@@ -46,6 +67,7 @@ parser.on('data', function(data) {
   console.log('rxd : ',data.toString('utf-8'))
 })
 
+
 /*
 setInterval(function(){
   port.write('9:4:001:1.000e+1', function(err) {
@@ -61,7 +83,9 @@ setInterval(function(){
 export default Vue.extend({
   name: 'FtVideoPlayer',
   components: {
-    'ft-card': FtCard
+    'ft-card': FtCard,
+    'stopwatch': stopwatch,
+    GChart
   },
   beforeRouteLeave: function () {
     if (this.player !== null) {
@@ -120,7 +144,12 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      jsk_msg:"Treadmill Test Output",
+    tmGaugeData1:[['Lavel','Value'],['Speed',0]],
+    gaugeOptions1:gaugeOptionSpeed,
+    gaugeSettings1:{packages:['gauge']},
+
+     jsk_msg:"00:00:00.00",
+
       id: '',
       powerSaveBlocker: null,
       volume: 1,
@@ -176,7 +205,6 @@ export default Vue.extend({
       }
     }
   },
-
   computed: {
     usingElectron: function () {
       return this.$store.getters.getUsingElectron
@@ -338,6 +366,7 @@ export default Vue.extend({
     }
   },
   mounted: function () {
+
     this.id = this._uid
 
     const volume = sessionStorage.getItem('volume')
@@ -383,6 +412,16 @@ export default Vue.extend({
     }
   },
   methods: {
+    setStartTime(timestamp){
+      console.log(timestamp)
+    },
+    setStopTime(timestamp,formattedTime){
+      console.log(timestamp,formattedTime)
+    },    
+    setLapTime(timestamp,formattedTime){
+      console.log(timestamp,formattedTime)
+    },    
+
     initializePlayer: async function () {
       // console.log(this.adaptiveFormats)
       const videoPlayer = document.getElementById(this.id)
@@ -1725,17 +1764,31 @@ export default Vue.extend({
       console.log("test click item : ", foo)
      
       let msg = '6'
-
       switch (foo){
-        case 1: msg = '9:4:001:1.000e+1'; break
-        case 2: msg = '9:4:002:1.000e+1'; break
-        case 3: msg = '9:4:003:1.000e+1'; break
-        case 4: msg = '9:4:004:1.000e+1'; break
-        case 5: msg = '9:4:005:1.000e+1'; break
+        case 1: 
+          msg = '9:4:905:1.000e-0' 
+          this.$refs.stopWatch.stop()
+          break //start
+        case 2: 
+          msg = '9:4:905:2.000e-0' 
+          break
+
+        case 3: 
+          console.log( "click start")
+          msg = '9:4:905:0.000e-0'
+          this.$refs.stopWatch.start()
+          break
+        case 4: 
+          msg = '9:4:904:1.000e-0'
+          break
+        case 5: 
+          this.$refs.stopWatch.reset()
+          msg = '9:4:005:1.000e-0' 
+          break
         default: break        
       } 
       if(msg !=='6'){
-        port.write('9:4:001:1.000e+1', function(err) {
+        port.write(msg, function(err) {
           if (err) { return console.log('Error on write: ', err.message)}
           console.log('txd : ',msg)
         })

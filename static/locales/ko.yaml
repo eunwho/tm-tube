@@ -807,6 +807,8 @@ Screenshot Error: 스크린샷이 실패했습니다. $
 Screenshot Success: 스크린샷을 "$"로 저장
 
 Treadmill:
+  Save:
+    Data Settings: 설정한 동작 패턴을 저장합니다.
   Settings: 동작 설정
   Select Run:
     Select Run: Select One

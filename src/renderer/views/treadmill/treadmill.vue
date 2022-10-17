@@ -3,8 +3,11 @@
   <div class="treadmillInner">
     
     <h1>{{ $t("Treadmill.Settings") }}</h1>
+    <ft-button
+        :label="$t('Treadmill.Save.Data Settings')"
+        @click="saveDataSettings"
+    />
     <h2> {{ $t('Treadmill.Select Run.TimeAndSpeed')}} </h2>
-
     <input type="radio" name="tmRadioRunMode" @click="updateRunType" value=0 v-model = "tmRunMode" >   
           {{ $t('Treadmill.Select Run.radioTimeSpeed')}}
     <div>
@@ -115,9 +118,9 @@
     <input type="radio" name="tmRadioInterval" @click="updateMode_Interval" value=2 v-model ="tmIntervalMode">
           {{ $t('Treadmill.Interval.IntervalPro')}}
     <GChart
-      type="LineChart"
-      :data="tmIntervalData1"
-      :options="chartOptions1"
+        type="LineChart"
+        :data="tmIntervalData1"
+        :options="chartOptions1"
     />  
     <ft-slider
         :label="$t('Treadmill.Interval.Interval LowTime')"

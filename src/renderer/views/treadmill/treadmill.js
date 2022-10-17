@@ -4,6 +4,7 @@ import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import FtSlider from '../../components/ft-slider/ft-slider.vue'
 import FtToggleSwitch from '../../components/ft-toggle-switch/ft-toggle-switch.vue'
 import FtRadioButton from '../../components/ft-radio-button/ft-radio-button.vue'
+import FtButton from '../../components/ft-button/ft-button.vue'
 //import {tmParameter} from '../../store/modules/utils.js'
 import fs from 'fs'
 import path from 'path'
@@ -85,6 +86,7 @@ export default Vue.extend({
   components: {
     'ft-card': FtCard,
     'ft-flex-box': FtFlexBox,
+    'ft-button': FtButton,
     'ft-toggle-switch': FtToggleSwitch,
     'ft-slider': FtSlider,
     'ft-radio-button': FtRadioButton,
@@ -96,13 +98,8 @@ export default Vue.extend({
       tmRunMode:        tmParam.tmRunMode,
       tmTimeSpeedMode:  tmParam.tmTimeSpeedMode,
       tmIntervalMode:   tmParam.tmIntervalMode,
-      tmProgramMode:    tmParam.tmProgramNode,
-/*
-      tmRunMode:        0,
-      tmTimeSpeedMode:  0,
-      tmIntervalMode:   0,
-      tmProgramMode:    0,
-*/      tmIntervalData1:  chartData1,
+      tmProgramMode:    tmParam.tmScheduleMode,
+      tmIntervalData1:  chartData1,
       chartOptions1: {
          title: 'Eunwho Power TMI Course',
          curveType:'function'
@@ -200,6 +197,13 @@ export default Vue.extend({
     }
   },  
   methods: {
+    saveDataSettings: function(){
+      const tmParamSave = JSON.stringify(tmParam)
+      fs.writeFileSync(fileLocation1, tmParamSave)
+//      fs.readFileSync(fileLocation)
+//      const testJsk = JSON.parse(fs.readFileSync(fileLocation))
+//      console.log(testJsk)       
+    },
     updateRunType: function (arg1) {
       tmParam.tmRunMode = arg1.target.value * 1.0
     },  
@@ -247,6 +251,10 @@ export default Vue.extend({
     updateTimeHigh_Interval: function (arg1) {
       const mode = tmParam.tmIntervalMode
       tmParam.interval.tmTimeHigh[mode] = arg1
+    },  
+    updateSpeedLow_Interval: function (arg1){
+      const mode = tmParam.tmIntervalMode
+      tmParam.interval.tmSpeedLow[mode] = arg1
     },  
     updateSpeedHigh_Interval: function (arg1){
       const mode = tmParam.tmIntervalMode

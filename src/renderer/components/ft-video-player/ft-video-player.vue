@@ -22,6 +22,14 @@
       >
     </video>
   </div>
+   <div class="jsk_graph">
+    <GChart
+        type="Gauge"
+        :data="tmGaugeData1"
+        :options="gaugeOptions1"
+        :settings="gaugeSettings1"
+      /> 
+    </div> 
     <div class="jsk-video-wrap" id="jsk-video-wrap">
         <a href="#" @click="jskVideoFunc1(1)"><div></div></a>
         <a href="#" @click="jskVideoFunc1(2)"><div></div></a>
@@ -29,7 +37,16 @@
         <a href="#" @click="jskVideoFunc1(4)"><div></div></a>
         <a href="#" @click="jskVideoFunc1(5)"><div></div></a>
     </div>
-    <div id='jsk-video-msg'>{{jsk_msg}}</div>
+      <!-- v-show="isStarted || isFinished" -->
+    <stopwatch
+      ref="stopWatch"
+      class="digits"
+      hours="false"
+      minutes
+      @start="setStartTime"
+      @stop="setStopTime"
+      @lap="setLapTime"
+    />
   </div>
 </template>
 <script src="./ft-video-player.js" />

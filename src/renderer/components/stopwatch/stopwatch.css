@@ -1,0 +1,14 @@
+.time {
+    position: fixed;
+  /*  color: white; */
+    color: #fff;
+    margin: 10px;
+    width: auto;
+    hight: 40px;
+    font-size: 50px;
+  
+    top:500px;
+    left:50px;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 999;
+}

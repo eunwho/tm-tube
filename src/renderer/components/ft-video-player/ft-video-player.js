@@ -23,7 +23,7 @@ const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
 
 port.on('open',function(e){
   if(e) return console.log("Error on :" + e.message)
-  console.log('serial open')
+  console.log('serial open:','/dev/ttyUSB0: baudRate 115200')
 })
 
 port.on('error',function(e){
@@ -887,42 +887,6 @@ export default Vue.extend({
       // TODO: Test formats to determine if HDR / 60 FPS and skip them based on
       // User settings
       this.setDashQualityLevel(formatsToTest[0].bitrate)
-
-      // Old logic. Revert if needed
-      /* this.player.qualityLevels().levels_.sort((a, b) => {
-        if (a.height === b.height) {
-          return a.bitrate - b.bitrate
-        } else {
-          return a.height - b.height
-        }
-      }).forEach((ql, index, arr) => {
-        const height = ql.height
-        const width = ql.width
-        const quality = width < height ? width : height
-        let upperLevel = null
-
-        if (index < arr.length - 1) {
-          upperLevel = arr[index + 1]
-        }
-
-        if (this.defaultQuality === quality && upperLevel === null) {
-          this.setDashQualityLevel(height, true)
-        } else if (upperLevel !== null) {
-          const upperHeight = upperLevel.height
-          const upperWidth = upperLevel.width
-          const upperQuality = upperWidth < upperHeight ? upperWidth : upperHeight
-
-          if (this.defaultQuality >= quality && this.defaultQuality === upperQuality) {
-            this.setDashQualityLevel(height, true)
-          } else if (this.defaultQuality >= quality && this.defaultQuality < upperQuality) {
-            this.setDashQualityLevel(height)
-          }
-        } else if (index === 0 && quality > this.defaultQuality) {
-          this.setDashQualityLevel(height)
-        } else if (index === (arr.length - 1) && quality < this.defaultQuality) {
-          this.setDashQualityLevel(height)
-        }
-      }) */
     },
 
     setDashQualityLevel: function (bitrate) {
@@ -982,85 +946,6 @@ export default Vue.extend({
           item.classList.add('quality-selected')
         }
       })
-
-      /* if (this.selectedQuality === qualityLevel && this.using60Fps === is60Fps) {
-        return
-      }
-      let foundSelectedQuality = false
-      this.using60Fps = is60Fps
-      this.player.qualityLevels().levels_.sort((a, b) => {
-        if (a.height === b.height) {
-          return a.bitrate - b.bitrate
-        } else {
-          return a.height - b.height
-        }
-      }).forEach((ql, index, arr) => {
-        if (foundSelectedQuality) {
-          ql.enabled = false
-          ql.enabled_(false)
-        } else if (qualityLevel === 'auto') {
-          ql.enabled = true
-          ql.enabled_(true)
-        } else if (ql.height === qualityLevel) {
-          ql.enabled = true
-          ql.enabled_(true)
-          foundSelectedQuality = true
-
-          let lowerQuality
-          let higherQuality
-
-          if ((index - 1) !== -1) {
-            lowerQuality = arr[index - 1]
-          }
-
-          if ((index + 1) < arr.length) {
-            higherQuality = arr[index + 1]
-          }
-
-          if (typeof (lowerQuality) !== 'undefined' && lowerQuality.height === ql.height && lowerQuality.bitrate < ql.bitrate && !is60Fps) {
-            ql.enabled = false
-            ql.enabled_(false)
-            foundSelectedQuality = false
-          }
-
-          if (typeof (higherQuality) !== 'undefined' && higherQuality.height === ql.height && higherQuality.bitrate > ql.bitrate && is60Fps) {
-            ql.enabled = false
-            ql.enabled_(false)
-            foundSelectedQuality = false
-          }
-        } else {
-          ql.enabled = false
-          ql.enabled_(false)
-        }
-      })
-
-      let selectedQuality = qualityLevel
-
-      if (selectedQuality !== 'auto' && is60Fps) {
-        selectedQuality = selectedQuality + 'p60'
-      } else if (selectedQuality !== 'auto') {
-        selectedQuality = selectedQuality + 'p'
-      }
-
-      const qualityElement = document.getElementById('vjs-current-quality')
-      qualityElement.innerText = selectedQuality
-      this.selectedQuality = qualityLevel
-
-      const qualityItems = $('.quality-item').get()
-
-      $('.quality-item').removeClass('quality-selected')
-
-      qualityItems.forEach((item) => {
-        const qualityText = $(item).find('.vjs-menu-item-text').get(0)
-        if (qualityText.innerText === selectedQuality) {
-          $(item).addClass('quality-selected')
-        }
-      })
-
-      // const currentTime = this.player.currentTime()
-
-      // this.player.currentTime(0)
-      // this.player.currentTime(currentTime) */
     },
 
     enableDashFormat: function () {
@@ -1943,22 +1828,20 @@ export default Vue.extend({
       }
     },
     jskVideoFunc1:function(foo){
-      //document.getElementById(this.videoId).classList.add("jsk_video_1")
-      // document.getElementById(this.videoId).classList.add("fullScreenBackground")
       console.log("test click item : ", foo)
      
       let msg = '6'
 
       switch (foo){
-        case 1: msg = '9:4:001:1.000e+1'; break
-        case 2: msg = '9:4:002:1.000e+1'; break
-        case 3: msg = '9:4:003:1.000e+1'; break
-        case 4: msg = '9:4:004:1.000e+1'; break
-        case 5: msg = '9:4:005:1.000e+1'; break
+        case 1: msg = '9:4:905:1.000e-0'; break
+        case 2: msg = '9:4:905:2.000e-0'; break
+        case 3: msg = '9:4:905:0.000e-0'; break
+        case 4: msg = '9:4:905:3.000e-0'; break
+        case 5: msg = '9:4:905:1.000e-0'; break
         default: break        
       } 
       if(msg !=='6'){
-        port.write('9:4:001:1.000e+1', function(err) {
+        port.write(msg, function(err) {
           if (err) { return console.log('Error on write: ', err.message)}
           console.log('txd : ',msg)
         })

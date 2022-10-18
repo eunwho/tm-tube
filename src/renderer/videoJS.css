@@ -420,7 +420,8 @@ body.vjs-full-window {
 .vjs-full-window .video-js.vjs-full-screen {
   position: fixed;
   overflow: hidden;
-  z-index: 1000;
+/*  z-index: 1000; */
+  z-index: 20;
   left: 0;
   top: 0;
   bottom: 0;
@@ -517,7 +518,8 @@ body.vjs-full-window {
 .vjs-full-window .video-js.vjs-fullscreen {
   position: fixed;
   overflow: hidden;
-  z-index: 1000;
+/*  z-index: 1000; */
+  z-index: 10;
   left: 0;
   top: 0;
   bottom: 0;

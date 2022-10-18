@@ -384,9 +384,6 @@ Settings:
     Custom External Player Executable: 사용자 정의 외부 플레이어 실행 파일
     External Player: 외부 플레이어
     Ignore Unsupported Action Warnings: 지원되지 않는 작업 경고 무시
-    Players:
-      None:
-        Name: 이름 *
   Download Settings:
     Download Settings: 다운로드 설정
     Ask Download Path: 다운로드 경로 요청
@@ -589,7 +586,6 @@ Video:
     Years: '년'
     Ago: '전에'
     Upcoming: '초연일'
-    In less than a minute: 1분 이내에
   Published on: '게시일'
   Streamed on: '스트리밍됨'
   Started streaming on: '스트리밍 시작'
@@ -638,7 +634,6 @@ Video:
     interaction: 상호 작용
   translated from English: 영어에서 번역됨
   Skipped segment: 건너뛴 세그먼트
-  Premieres: 프리미어
 Videos:
   #& Sort By
   Sort By:
@@ -666,7 +661,7 @@ Playlist:
   Playlist: 재생 목록
 Toggle Theatre Mode: '극장 모드 전환'
 Change Format:
-  Change Media Formats: '비디오 형식 변경'
+  Change Video Formats: '비디오 형식 변경'
   Use Dash Formats: 'DASH 형식 사용'
   Use Legacy Formats: '레거시 형식 사용'
   Use Audio Formats: '오디오 형식 사용'
@@ -810,6 +805,53 @@ Starting download: '"$" 다운로드를 시작하는 중'
 Downloading failed: '"$"를 다운로드하는 동안 문제가 발생했습니다'
 Screenshot Error: 스크린샷이 실패했습니다. $
 Screenshot Success: 스크린샷을 "$"로 저장
-Clipboard:
-  Copy failed: 클립보드에 복사 실패
-  Cannot access clipboard without a secure connection: 안전한 연결 없이 클립보드에 접근할 수 없습니다
+
+Treadmill:
+  Save:
+    Data Settings: 설정한 동작 패턴을 저장합니다.
+  Settings: 동작 설정
+  Select Run:
+    Select Run: Select One
+    TimeAndSpeed: 설정된 시간과 속도로 동작합니다.
+    radioTimeSpeed: 설정된 시간과 속도로 동작합니다.
+    Interval: 인터벌 동작 즉 전력 질주와 휴지기를 반복하여 근력을 높이는 운동입니다.
+    IntervalBeginner: 초심자용 근력 훈련 인터벌 동작을 합니다.
+    IntervalNormal: 중급자 인터벌 동작
+    IntervalPro: 상급자 인터벌 동작
+    ProgramRun: 실제 도로를 모사하여 속도와 경사도가 변경하는 경로를 달립니다.
+    ProgramBeginner: 초급자용 도로 모사 동작
+    ProgramNormal: 중급자용 야외도로 모사 동작
+    ProgramPro: 상급자용 도로모사 동작
+  
+  TimeSpeed:   
+    Set Time Beginner:      입문자 동작 시간 설정
+    Set Speed Beginner:     입문자 동작 속도 설정
+    Set Incline Beginner:   입문자 기울기 설정
+    Set Time Normal:        숙련자 동작 시간 설정
+    Set Speed Normal:       숙련자 동작 속도 설정
+    Set Incline Normal:     숙련자 기울기 설정
+    Set Time Pro:           전문가 동작 시간 설정
+    Set Speed Pro:          전문가 동작 속도 설정
+    Set Incline Pro:        전문가 기울기 설정
+    TimeSpeedBeginner : 초심자용
+    TimeSpeedNormal   : 중급자용
+    TimeSpeedPro      : 상급자용
+   
+  Interval:
+    Interval LowTime:   인터벌 회복 시간 설정
+    Interval HighTime:  인터벌 고속 시간 설정
+    Interval LowSpeed:  인터벌 회복 속도 설정
+    Interval HighSpeed: 인터벌 고속 속도 설정
+    Interval LowIncline  : 인터벌 회복 경사각 설정
+    Interval HighIncline  : 인터벌 고속 경사각 설정
+    IntervalBeginner : 초심자용
+    IntervalNormal   : 중급자용
+    IntervalPro      : 상급자용
+    
+  Program:
+    ProgramRun : 가상 경로 달리기 
+    Program 0: 가상 경로 0
+    Program 1: 가상 경로 1
+    Program 2: 가상 경로 2
+    Program 3: 가상 경로 3
+    Program 4: 가상 경로 4

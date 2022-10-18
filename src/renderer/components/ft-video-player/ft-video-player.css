@@ -15,16 +15,30 @@
   hight: 40px;
   font-size: 30px;
 
-  top:100px;
+  top:200px;
+  left:700px;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 99;
+}
+#jsk-video-clock {
+  position: fixed;
+/*  color: white; */
+  color: #fff;
+  margin: 10px;
+  width: auto;
+  hight: 100px;
+  font-size: 100px;
+
+  top:300px;
   left:700px;
   background-color: rgba(0,0,0,0.3);
   z-index: 99;
 }
 
 #jsk-video-wrap {
-  /* pointer-events: inherit; */
-  height:100%;
-  width:100%;
+  position: fixed;
+  height:100px;
+  width:100px;
   z-index: 99;
 }
 
@@ -103,4 +117,14 @@
 
 #jsk-video-wrap a:hover {
   opacity:0.5;
+}
+
+.jsk_graph {
+  position: fixed;
+  top:600px;
+  left:50px;
+  height:300px;
+  width: 300px;
+  opacity:0.4;
+  z-index: 99;
 }

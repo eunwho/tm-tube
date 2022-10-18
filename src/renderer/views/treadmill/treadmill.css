@@ -1,0 +1,18 @@
+.treadmillInner {
+/*  max-width: 1000px; */
+  margin:25px;
+  padding: 20px 20px 70px 20px;
+
+  background-color: var(--card-bg-color);
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+
+  opacity: 0.9;
+}
+
+input[name='treadmillRadio'] {
+  font-size: 30pt;
+  accent-color: red;
+  width: 20px;
+  height: 20px;
+}
+

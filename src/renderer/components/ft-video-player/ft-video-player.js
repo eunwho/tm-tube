@@ -2,8 +2,11 @@
 // sudo dmesg | grep tty
 
 import Vue from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions} from 'vuex'
 import FtCard from '../ft-card/ft-card.vue'
+import FtButton from '../ft-button/ft-button.vue'
+
+
 
 import $ from 'jquery'
 import videojs from 'video.js'
@@ -18,7 +21,9 @@ import 'videojs-http-source-selector'
 import { IpcChannels } from '../../../constants'
 
 import stopwatch from '../stopwatch/stopwatch.vue'
-import {GChart} from 'vue-google-charts/legacy'
+import { VueSvgGauge } from 'vue-svg-gauge'
+
+import { contextIsolated } from 'process'
 
 /*
 export interface InterByteTimeoutOptions extends TransformOptions{
@@ -43,30 +48,55 @@ var gaugeOptionSpeed={
   greenTo:15,
   minorTicks:5
 }
- 
-const {SerialPort} = require('serialport')
 
+/*
+var count =0;
+const {SerialPort} = require('serialport')
 const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
-//const { ReadlineParser } = require('@serialport/parser-readline')
-const port = new SerialPort({ path: '/dev/ttyUSB2', baudRate: 115200 })
-//const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
-//const parser = port.pipe(new InterByteTimeoutParser({ interval: 50,length:30 }))
+const port = new SerialPort({ path: '/dev/ttyUSB1', baudRate: 115200 })
 const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
 
 port.on('open',function(e){
   if(e) return console.log("Error on :" + e.message)
   console.log('serial open')
 })
+port.on('error',function(e){
+  console.log("Serial Error :"+e.message)
+})
+parser.on('data', function(data) {
 
+  console.log('rxd : ',data.toString('utf-8')) 
+  //console.log(tmGaugeData1)
+  this.$emit('rxData',data.toString('utf-8'))
+  //this.tmGaugeData1
+  //this.$emit('tmGaugeData1',data.toString('utf-8'))
+})
+*/
+var count = 0;
+const {SerialPort} = require('serialport')
+const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
+const port = new SerialPort({ path: '/dev/ttyUSB1', baudRate: 115200 })
+const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
+
+if(port){
+    port.close((err)=>{
+      console.log("port close",err)
+    });
+}
+
+port.on('open',function(e){
+  if(e) return console.log("Error on :" + e.message)
+  console.log('serial open')
+})
 port.on('error',function(e){
   console.log("Serial Error :"+e.message)
 })
 
 parser.on('data', function(data) {
-  
-  console.log('rxd : ',data.toString('utf-8'))
+  console.log('rxd : ',data.toString('utf-8')) 
+  // this.speedGaugeValue = ;
+  // this.inclineGaugeValue = ;
 })
-
 
 /*
 setInterval(function(){
@@ -80,14 +110,18 @@ setInterval(function(){
 },5000)
 */
 
+// serialport.close(callback?: error => {}): void
+
 export default Vue.extend({
   name: 'FtVideoPlayer',
   components: {
     'ft-card': FtCard,
+    'ft-button': FtButton,
     'stopwatch': stopwatch,
-    GChart
+     VueSvgGauge
   },
   beforeRouteLeave: function () {
+
     if (this.player !== null) {
       this.exitFullWindow()
     }
@@ -144,11 +178,10 @@ export default Vue.extend({
   },
   data: function () {
     return {
-    tmGaugeData1:[['Lavel','Value'],['Speed',0]],
-    gaugeOptions1:gaugeOptionSpeed,
-    gaugeSettings1:{packages:['gauge']},
-
-     jsk_msg:"00:00:00.00",
+      speedGaugeValue: 0,
+      inclineGaugeValue: 0,
+      rxData:'',
+      jsk_msg:"00:00:00.00",
 
       id: '',
       powerSaveBlocker: null,
@@ -205,6 +238,10 @@ export default Vue.extend({
       }
     }
   },
+  created(){
+    this.value = 0;
+  },
+
   computed: {
     usingElectron: function () {
       return this.$store.getters.getUsingElectron
@@ -366,7 +403,7 @@ export default Vue.extend({
     }
   },
   mounted: function () {
-
+    
     this.id = this._uid
 
     const volume = sessionStorage.getItem('volume')
@@ -412,16 +449,31 @@ export default Vue.extend({
     }
   },
   methods: {
-    setStartTime(timestamp){
+    update_GaugeData1: function( arg ){
+      (this.gaugeDataRows[1]) = arg
+      var arg1 = this.gaugeDataRows[1]
+      console.log("udate_GaugeData1",arg1)
+      console.log("hook beforUpdate")
+      this.update_tmGaugeData1()
+    },
+
+    update_tmGaugeData1:function(){
+      this.tmGaugeData1[1][1] = this.gaugeDataRows[1]
+    },
+    setStartTime(arg){
+      console.log("emit receive startStopWatch")
+    },
+    setStopTime(timestamp){
       console.log(timestamp)
     },
-    setStopTime(timestamp,formattedTime){
-      console.log(timestamp,formattedTime)
-    },    
     setLapTime(timestamp,formattedTime){
       console.log(timestamp,formattedTime)
     },    
-
+/*
+    setLapTime(timestamp,formattedTime){
+      console.log(timestamp,formattedTime)
+    },    
+*/
     initializePlayer: async function () {
       // console.log(this.adaptiveFormats)
       const videoPlayer = document.getElementById(this.id)
@@ -1758,41 +1810,57 @@ export default Vue.extend({
       }
     },
 
-    jskVideoFunc1:function(foo){
-      //document.getElementById(this.videoId).classList.add("jsk_video_1")
-      // document.getElementById(this.videoId).classList.add("fullScreenBackground")
-      console.log("test click item : ", foo)
-     
-      let msg = '6'
-      switch (foo){
-        case 1: 
-          msg = '9:4:905:1.000e-0' 
-          this.$refs.stopWatch.stop()
-          break //start
-        case 2: 
-          msg = '9:4:905:2.000e-0' 
-          break
-
-        case 3: 
-          console.log( "click start")
-          msg = '9:4:905:0.000e-0'
-          this.$refs.stopWatch.start()
-          break
-        case 4: 
-          msg = '9:4:904:1.000e-0'
-          break
-        case 5: 
-          this.$refs.stopWatch.reset()
-          msg = '9:4:005:1.000e-0' 
-          break
-        default: break        
-      } 
-      if(msg !=='6'){
-        port.write(msg, function(err) {
-          if (err) { return console.log('Error on write: ', err.message)}
-          console.log('txd : ',msg)
-        })
-      }
+    tmJskStart:function(){
+      this.$refs.stopWatch.tmStart()
+      this.speedGaugeValue = 7;
+      var msg = '9:4:905:0.250e+0'  // start
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
+    tmJskStop:function(){
+      this.$refs.stopWatch.tmStop()
+      this.speedGaugeValue = 0;
+      var msg = '9:4:905:0.000e+0'  // start
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
+    tmJskPause:function(){
+      this.$refs.stopWatch.tmReset()
+      //this.svgGaugeValue = ;
+      var msg = '9:4:905:0.000e+0'  // start
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
+    tmJskSpeedUp:function(){
+      var msg = '9:4:905:0.800e+0'  // start
+      //this.svgGaugeValue = ;
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },  
+    tmJskSpeedDown:function(){
+      var msg = '9:4:905:0.2500e+0'  // start
+      //this.svgGaugeValue = ;
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
+    tmJskInclineUp:function(){
+      this.inclineGaugeValue = 90;
+      var msg = '9:4:906:3.000e+0'  // start
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
+    tmJskInclineDown:function(){
+      this.inclineGaugeValue = 50;
+      var msg = '9:4:906:3.000e+0'  // start
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
     },
 
     ...mapActions([

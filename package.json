@@ -79,6 +79,7 @@
     "vue-i18n": "^8.25.0",
     "vue-observe-visibility": "^1.0.0",
     "vue-router": "^3.5.2",
+    "vue-svg-gauge": "^1.2.1",
     "vuex": "^3.6.2",
     "youtube-suggest": "^1.1.2",
     "yt-channel-info": "^3.0.4",

@@ -14,28 +14,28 @@ export default {
   },
 
   methods: {
-    start() {
+    tmStart() {
       if (this.isRunning) throw new Error('Stopwatch has already started.');
       this.isRunning = true;
       if (!this.startTime) this.startTime = performance.now();
-      this.$emit('start', this.startTime);
+      this.$emit('tmStart', this.startTime);
       this.frameId = requestAnimationFrame(this.step);
     },
 
-    lap(id) {
-      this.$emit('lap', performance.now(), this.time, id);
+    tmLap(id) {
+      this.$emit('tmLap', performance.now(), this.time, id);
     },
 
-    stop() {
+    tmStop() {
       if (!this.isRunning) throw new Error('Stopwatch has not been started yet.');
       this.isRunning = false;
       this.startTime = null;
       this.times = [0, 0, 0, 0];
-      this.$emit('stop', performance.now(), this.time);
+      this.$emit('tmStop', performance.now(), this.time);
       cancelAnimationFrame(this.frameId);
     },
 
-    reset() {
+    tmReset() {
       this.startTime = 0;
       this.isRunning = false;
       this.times = [0, 0, 0, 0];

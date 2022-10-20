@@ -73,7 +73,7 @@ export default Vue.extend({
       if (thumbnailUrl.startsWith('//')) {
         thumbnailUrl = `https:${thumbnailUrl}`
       }
-
+// debugjsk
       this.thumbnail = thumbnailUrl.replace('https://yt3.ggpht.com', `${this.currentInvidiousInstance}/ggpht/`)
 
       this.channelName = this.data.author

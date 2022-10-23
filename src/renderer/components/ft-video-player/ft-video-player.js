@@ -50,7 +50,7 @@ parser.on('data', function(data) {
 const {SerialPort} = require('serialport')
 const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
 
-const port = new SerialPort({ path: '/dev/ttyUSB1', baudRate: 115200 })
+const port = new SerialPort({ path: '/dev/ttyS0', baudRate: 115200 })
 const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
 if(port){
     port.close((err)=>{
@@ -1795,7 +1795,7 @@ export default Vue.extend({
     tmJskStart:function(){
       this.$refs.stopWatch.tmStart()
       this.speedGaugeValue = 10 * 0.25;
-      var msg = '9:4:905:0.2500e+0'  // start
+      var msg = '9:4:905:0.000e+0'  // start
       port.write(msg, function(err) {
         if (err) { return console.log('Error on write: ', err.message)}
       })
@@ -1803,7 +1803,7 @@ export default Vue.extend({
     tmJskStop:function(){
       this.speedGaugeValue = 0;
       this.$refs.stopWatch.tmStop()
-      var msg = '9:4:905:0.000e+0'  // start
+      var msg = '9:4:905:1.000e+0'  // start
       port.write(msg, function(err) {
         if (err) { return console.log('Error on write: ', err.message)}
       })
@@ -1811,7 +1811,7 @@ export default Vue.extend({
     tmJskPause:function(){
       this.$refs.stopWatch.tmReset()
       this.speedGaugeValue = 0;
-      var msg = '9:4:905:0.000e+0'  // start
+      var msg = '9:4:905:1.000e+0'  // start
       port.write(msg, function(err) {
         if (err) { return console.log('Error on write: ', err.message)}
       })
@@ -1819,7 +1819,7 @@ export default Vue.extend({
     tmJskSpeedUp:function(){
       this.speedGaugeValue = (this.speedGaugeValue)*1.0 + 1.0
       var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
-      var msg =    "9:4:905:"+ referIn.toExponential(3);
+      var msg =    "9:4:905:2.000e-0";
       console.log(msg)
       port.write(msg, function(err) {
         if (err) { return console.log('Error on write: ', err.message)}
@@ -1828,7 +1828,7 @@ export default Vue.extend({
     tmJskSpeedDown:function(){
       this.speedGaugeValue = (this.speedGaugeValue)*1.0 - 1.0
       var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
-      var msg =    '9:4:905:'+ referIn.toExponential(3);
+      var msg =    '9:4:905:3.000e-0'+ referIn.toExponential(3);
       console.log(msg)
       port.write(msg, function(err) {
         if (err) { return console.log('Error on write: ', err.message)}

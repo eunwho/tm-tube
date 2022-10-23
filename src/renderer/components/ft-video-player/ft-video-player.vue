@@ -24,31 +24,31 @@
     </div>
    <div class="tmJskDashBoard tmJskButton">
       <ft-button
-        :label="$t('Treadmill.Button.tmJskStart')"
+        :label="$t('Treadmill.tmButton.tmJskStart')"
         @click="tmJskStart"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskStop')"
+        :label="$t('Treadmill.tmButton.tmJskStop')"
         @click="tmJskStop"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskPause')"
+        :label="$t('Treadmill.tmButton.tmJskPause')"
         @click="tmJskPause"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskSpeedUp')"
+        :label="$t('Treadmill.tmButton.tmJskSpeedUp')"
         @click="tmJskSpeedUp"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskSpeedDown')"
+        :label="$t('Treadmill.tmButton.tmJskSpeedDown')"
         @click="tmJskSpeedDown"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskInclineUp')"
+        :label="$t('Treadmill.tmButton.tmJskInclineUp')"
         @click="tmJskInclineUp"
       />
       <ft-button
-        :label="$t('Treadmill.Button.tmJskInclineDown')"
+        :label="$t('Treadmill.tmButton.tmJskInclineDown')"
         @click="tmJskInclineDown"
       />
    </div>

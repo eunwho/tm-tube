@@ -42,7 +42,6 @@
     "rebuild:electron": "electron-builder install-app-deps",
     "rebuild:node": "npm rebuild",
     "release": "run-s test build",
-    "ci": "yarn install --frozen-lockfile",
     "rebuild": "electron-rebuild -f -w seriport"
   },
   "dependencies": {

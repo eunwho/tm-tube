@@ -807,6 +807,15 @@ Screenshot Error: 스크린샷이 실패했습니다. $
 Screenshot Success: 스크린샷을 "$"로 저장
 
 Treadmill:
+  tmButton:
+    tmJskStart    : 시작
+    tmJskStop     : 동작정지
+    tmJskPause    : 일시정지
+    tmJskSpeedUp  : 가속
+    tmJskSpeedDown : 감속
+    tmJskInclineUp : 상승
+    tmJskInclineDown : 상승
+
   Save:
     Data Settings: 설정한 동작 패턴을 저장합니다.
   Settings: 동작 설정
@@ -856,12 +865,4 @@ Treadmill:
     Program 3: 가상 경로 3
     Program 4: 가상 경로 4
 
-  Button:
-      tmJskStart    : 시작
-      tmJskStop     : 동작정지
-      tmJskPause    : 일시정지
-      tmJskSpeedUp  : 가속
-      tmJskSpeedDown: 감속
-      tmJskInclineUp: 상승
-      tmJskInclineDown: 하강
       

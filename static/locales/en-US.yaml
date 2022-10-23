@@ -808,6 +808,15 @@ Yes: Yes
 No: No
 
 Treadmill:
+  tmButton:
+    tmJskStart    : START
+    tmJskStop     : STOP
+    tmJskPause    : PAUSE
+    tmJskSpeedUp  : SPEEDUP
+    tmJskSpeedDown : SPEEDDOWN
+    tmJskInclineUp : INC UP
+    tmJskInclineDown : INC DOWN
+
   Settings: Settings
   Select Run Type: Select Run Type
   Select Run:

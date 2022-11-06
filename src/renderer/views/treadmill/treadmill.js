@@ -6,10 +6,11 @@ import FtToggleSwitch from '../../components/ft-toggle-switch/ft-toggle-switch.v
 import FtRadioButton from '../../components/ft-radio-button/ft-radio-button.vue'
 import FtButton from '../../components/ft-button/ft-button.vue'
 //import {tmParameter} from '../../store/modules/utils.js'
+
+
 import fs from 'fs'
 import path from 'path'
 
-import {GChart} from 'vue-google-charts/legacy'
 
 const fileLocation = './eunwhoPE.json.bk'
 const fileLocation1 = './eunwhoPE.json'
@@ -18,6 +19,9 @@ const tmParam = JSON.parse(fs.readFileSync(fileLocation1))
 
 const testJsk = JSON.parse(fs.readFileSync(fileLocation))
 console.log(testJsk)
+
+
+import {GChart} from 'vue-google-charts/legacy'
 
 const chartData1 = [
   [ "time", "Speed","Incline"],

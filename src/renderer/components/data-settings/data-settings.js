@@ -11,6 +11,20 @@ import fs from 'fs'
 import { opmlToJSON } from 'opml-to-json'
 import ytch from 'yt-channel-info'
 
+/*
+import fs from 'fs'
+import path from 'path'
+
+
+const fileLocation = './eunwhoPE.json.bk'
+const fileLocation1 = './eunwhoPE.json'
+
+const tmParam = JSON.parse(fs.readFileSync(fileLocation1))
+
+const testJsk = JSON.parse(fs.readFileSync(fileLocation))
+console.log(testJsk)
+*/
+
 // FIXME: Missing web logic branching
 
 export default Vue.extend({

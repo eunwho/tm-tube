@@ -814,7 +814,8 @@ Treadmill:
     tmJskSpeedUp  : 가속
     tmJskSpeedDown : 감속
     tmJskInclineUp : 상승
-    tmJskInclineDown : 상승
+    tmJskInclineDown : 하강
+    tmJskInclineStop : 경사정지
 
   Save:
     Data Settings: 설정한 동작 패턴을 저장합니다.

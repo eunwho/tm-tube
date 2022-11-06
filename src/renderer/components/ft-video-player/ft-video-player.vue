@@ -51,6 +51,10 @@
         :label="$t('Treadmill.tmButton.tmJskInclineDown')"
         @click="tmJskInclineDown"
       />
+      <ft-button
+        :label="$t('Treadmill.tmButton.tmJskInclineStop')"
+        @click="tmJskInclineStop"
+      />
    </div>
    <div>
       <div class="tmJskDashBoard tmJskSpeedGauge">
@@ -64,6 +68,7 @@
           gauge-color="darkgreen"
           :scale-interval="1.0"
           />
+
         </div>     
         <div class="tmJskDashBoard tmJskInclineGauge">
           <vue-svg-gauge
@@ -72,13 +77,17 @@
           :value="inclineGaugeValue"
           :separator-step="0"
           :min="0"
-          :max="100"
+          :max="20"
           gauge-color="gold"
-          :scale-interval="5"
+          :scale-interval="2"
           />
-    </div>
-    <div class="tmJskDashBoard tmJskMessage">{{jsk_msg}}</div>
-    <div class="tmJskDashBoard tmStopWatch">
+      </div>
+      <div class="tmJskDashBoard tmJskSetSpeed">{{txtTmSetSpeed}}</div>
+      <div class="tmJskDashBoard tmJskOutSpeed">{{txtTmOutSpeed}}</div>
+      <div class="tmJskDashBoard tmJskSetTime">{{txtTmSetTime}}</div>
+      <div class="tmJskDashBoard tmStopWatch">
+      <div class="svgSpeedValueText">{{speedGaugeValueText}}</div>
+      <div class="svgInclineValueText">{{inclineGaugeValueText}}</div>
       <stopwatch
         ref="stopWatch"
         class="digits"

@@ -6,8 +6,8 @@ import i18n from '../../i18n/index'
 
 import { IpcChannels } from '../../../constants'
 
-
 const state = {
+  tmParam :[],
   isSideNavOpen: false,
   sessionSearchHistory: [],
   popularCache: null,
@@ -66,7 +66,6 @@ const state = {
     'CatppuccinMochaSapphire',
     'CatppuccinMochaBlue',
     'CatppuccinMochaLavender'
-
   ],
   colorValues: [
     '#d50000',
@@ -114,6 +113,9 @@ const state = {
   }
 
 const getters = {
+  getTmParam(){
+    return state.tmParam
+  },
   getIsSideNavOpen () {
     return state.isSideNavOpen
   },
@@ -1048,6 +1050,11 @@ const actions = {
 }
 
 const mutations = {
+// jskdebug
+  setTmParam ( state, value ) {
+    state.tmParam = value
+  },
+
   toggleSideNav (state) {
     state.isSideNavOpen = !state.isSideNavOpen
   },

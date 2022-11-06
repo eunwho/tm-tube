@@ -250,7 +250,7 @@ export default Vue.extend({
 
       this.ytGetVideoInformation(this.videoId)
         .then(async result => {
-          console.log(result)
+          // console.log(result)  // jskdebug
 
           const playabilityStatus = result.player_response.playabilityStatus
           if (playabilityStatus.status === 'UNPLAYABLE') {
@@ -283,7 +283,7 @@ export default Vue.extend({
           if ('id' in result.videoDetails.author) {
             this.channelId = result.player_response.videoDetails.channelId
             this.channelName = result.videoDetails.author.name
-            console.log(result)
+            // console.log(result) // jskdebug
             if (result.videoDetails.author.thumbnails.length > 0) {
               this.channelThumbnail = result.videoDetails.author.thumbnails[0].url
             }

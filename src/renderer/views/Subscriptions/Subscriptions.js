@@ -258,7 +258,9 @@ export default Vue.extend({
 
           resolve(videos)
         }).catch((err) => {
-          console.log(err)
+          //console.log(err)
+          console.log("ERR getChannelVideosLocalScraper")
+          
           const errorMessage = this.$t('Local API Error (Click to copy)')
           this.showToast({
             message: `${errorMessage}: ${err}`,

@@ -23,40 +23,34 @@ import { VueSvgGauge } from 'vue-svg-gauge'
 
 import { contextIsolated } from 'process'
 
-/*
-var count =0;
-const {SerialPort} = require('serialport')
-const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
-const port = new SerialPort({ path: '/dev/ttyUSB1', baudRate: 115200 })
-const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
+const TM_RUN = 1
+const TM_STOP = 0
 
-port.on('open',function(e){
-  if(e) return console.log("Error on :" + e.message)
-  console.log('serial open')
-})
-port.on('error',function(e){
-  console.log("Serial Error :"+e.message)
-})
-parser.on('data', function(data) {
+var tmState =0
+var lapTime = 0
+var timeRef = 0
+var RefToKPH = 10.0 // 1.0  to km / hour  
+var speedOut   = 0  
+var speedRef   = 0  
+var inclineOut = 0
+var inclineRef = 0
 
-  console.log('rxd : ',data.toString('utf-8')) 
-  //console.log(tmGaugeData1)
-  this.$emit('rxData',data.toString('utf-8'))
-  //this.tmGaugeData1
-  //this.$emit('tmGaugeData1',data.toString('utf-8'))
-})
-*/
+var tmTimeLow,tmTimeHigh,tmSpeedHigh,tmSpeedLow,tmInclineHigh,tmInclineLow
 
 const {SerialPort} = require('serialport')
-const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
 
-const port = new SerialPort({ path: '/dev/ttyS0', baudRate: 115200 })
+const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
+//const port = new SerialPort({ path: '/dev/ttyS0', baudRate: 115200 })
+const port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 115200 })
 const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
+
 if(port){
     port.close((err)=>{
-      console.log("port close",err)
+//      console.log("port close Error",err)
+      console.log("port close Error")
     });
 }
+
 port.on('open',function(e){
   if(e) return console.log("Error on :" + e.message)
   console.log('serial open')
@@ -65,27 +59,48 @@ port.on('error',function(e){
   console.log("Serial Error :"+e.message)
 })
 
-
 /*
-update_Monitor: function(){
-  parser.on('data', function(data) {
-    console.log('rxd : ',data.toString('utf-8')) 
-    this.speedGaugeValue = (this.speedGaugeValue < 20 ) ? this.speedGaugeValue + 1 : 0;
-    this.inclineGaugeValue = (this.inclineGaugeValue < 100 ) ? this.speedGaugeValue + 10 : 0;  
-  })
-},
-/*
-setInterval(function(){
-  port.write('9:4:001:1.000e+1', function(err) {
-    if (err) {
-      return console.log('Error on write: ', err.message)
-    }
-    console.log('message written')
-  })
+SerialPort.list().then(
+	ports => {
+	  ports.forEach(port => {
+	  if(port.manufacturer === "Silicon Labs"){
+      const portName = port.path
+      console.log(portName)
+      myPort = new SerialPort({
+        path:portName, 
+        baudRate:115200, 
+        dataBits : 8,
+        parity : 'none',
+        stopBits: 1,
+        flowControl: 'hardware'
+      })      
+      const parser = myPort.pipe(new InterByteTimeoutParser({ interval: 50}))
+      
+      myPort.on('open', 
+        () => console.log('COM open : '+portName+':'+'baudRate='+myPort.baudRate
+      ))
+      myPort.on('close', ()=>console.log("port closed!"))
+      myPort.on('error', (err)=>console.log('Error :',err))
+	  }
   
-},5000)
+	  })
+	},
+	err => {
+	  console.error('Error listing ports', err)
+  }
+)
 */
-
+var graphData={
+  Ref:    0,
+  rpm:    0,
+  Irms:   0,
+  Power:  0,
+  Vdc:    0,
+  Graph1: 0,
+  Graph2: 0,
+  Graph3: 0,
+  Graph4: 0        
+}
 
 export default Vue.extend({
   name: 'FtVideoPlayer',
@@ -153,9 +168,17 @@ export default Vue.extend({
   },
   data: function () {
     return {
+      speedOut : 0,
+      inclineOut:0,
+      tmParam:[],
       speedGaugeValue: 0,
       inclineGaugeValue: 0,
+      speedGaugeValueText:0,
+      inclineGaugeValueText:0,
       rxData:'',
+      txtTmSetSpeed:"Set: 0[km/h]",
+      txtTmOutSpeed:"Out: 0[km/h]",
+      txtTmSetTime:"00:00:00:00",
       jsk_msg:"00:00:00.00",
 
       id: '',
@@ -214,23 +237,23 @@ export default Vue.extend({
     }
   },
   created(){
+    this.readTmParam()
+/*
     parser.on('data', function(data) {
       setTimeout(() => {
         let returnVal = data.toString('utf-8')
         console.log('rxd = ',returnVal ) 
       }, 1000);
     })
+*/
   },
-
-  computed: {
+  computed: {    
     usingElectron: function () {
       return this.$store.getters.getUsingElectron
     },
-
     currentLocale: function () {
       return this.$store.getters.getCurrentLocale
     },
-
     defaultPlayback: function () {
       return this.$store.getters.getDefaultPlayback
     },
@@ -377,14 +400,12 @@ export default Vue.extend({
       return this.$store.getters.getScreenshotFolderPath
     }
   },
-  watch: {
-    rxData:function(newVal,oldVal){
-
-    },
+  watch: {    
     showStatsModal: function() {
       this.player.trigger(this.statsModalEventName)
     }
   },
+
   mounted: function () {
     
     this.id = this._uid
@@ -432,6 +453,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    readTmParam : function(){
+      const fileLocation1 = './eunwhoPE.json'
+      this.tmParam = JSON.parse(fs.readFileSync(fileLocation1))  
+      console.log("tmParam = ",this.tmParam)
+    },
     update_GaugeData1: function( arg ){
       (this.gaugeDataRows[1]) = arg
       var arg1 = this.gaugeDataRows[1]
@@ -1791,64 +1817,303 @@ export default Vue.extend({
         }
       }
     },
+//================================================
+// tread mill control message
+//================================================
+    writeCmd : function(msg){
+      port.write(msg, function(err) {
+        if (err) { return console.log('Error on write: ', err.message)}
+      })
+    },
 
+    ctrlSpeed : function( Ref ){
+      var sciCmd = '9:4:920:'
+      var codeData = ( Ref / RefToKPH ).toExponential(3) 
+      var msg = sciCmd + codeData;
+      console.log("tx msg =",msg)
+      this.writeCmd(msg)
+    },
+
+    ctrlIncline : function(Out, Ref ){
+/*
+      var msg = '9:4:905:1.000e+0'
+      if     (( Ref - Out) > 0.1 ) msg = '9:4:905:6.000e+0' // speedup
+      else if(( Ref - Out) > 0.01) msg = '9:4:905:7.000e+0' // speedup1
+      else if(( Ref - Out) > 0.0 ) msg = '9:4:900:0.000e+0' // speedup1
+      else if(( Ref - Out) > -0.1) msg = '9:4:905:8.000e+0' // speeddown1
+      else                         msg = '9:4:905:9.000e+0' // speeddown
+      this.writeCmd(msg)
+*/
+    },
+
+    tmCtrlLoop: function(){
+
+      lapTime += 2
+      console.log("lapTime = ",lapTime)
+
+      parser.on('data', function(data) {
+        var rxdLength = data.length
+        let returnVal = data.toString('utf-8')
+        console.log('rxd = %s, rxNo=%d',returnVal,rxdLength ) 
+
+        if ( rxdLength !== 32 ) return
+
+        var rx_data = data.slice(-16)
+        var buff = new Buffer.from(rx_data,'utf8')
+
+        var i = 7
+        var msb = ( buff[i*2] & 0x0f) * 256
+        var lsb = (buff[ i*2 + 1] & 0x7f) * 1
+            lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Vdc = (((msb + lsb ) -2048 ) / 409.6) * 200
+
+        i = 6
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+          lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Ref = (((msb + lsb) - 2048 ) / 409.6) * 0.5
+
+        i = 5
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.rpm    = ((( msb + lsb ) - 2048 ) / 409.6) * 1000
+//        graphData.Graph6 = ((( msb + lsb ) - 2048 ) / 409.6) * 1000
+
+        i = 4
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Irms   = ((( msb + lsb ) - 2048 ) / 409.6)* 5
+//        graphData.Graph5 = ((( msb + lsb ) - 2048 ) / 409.6)* 5
+
+        i = 3  
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Graph4 = ((( msb + lsb ) - 2048 ) / 409.6) * 1000
+
+        i = 2  
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Graph3 = ((( msb + lsb ) - 2048 ) / 409.6 ) * 2.5
+
+        i = 1  
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Graph2 = ((( msb + lsb ) - 2048 )/ 409.6) * 0.25
+
+        i = 0  
+        msb = ( buff[i*2] & 0x0f) * 256
+        lsb = (buff[ i*2 + 1] & 0x7f) * 1
+        lsb = ( (buff[i * 2 ] & 0x40 ) === 0x00 ) ? lsb  : lsb + 128
+        graphData.Graph1= ((( msb + lsb ) - 2048 ) / 409.6) * 4
+        
+        inclineOut = graphData.Graph1
+        console.log("inclineOut = ", inclineOut)        
+
+        speedOut = graphData.Ref * RefToKPH
+        // inclineOut = 0                        // debug jsk      
+      })
+      this.speedGaugeValue = speedOut
+      this.inclineGaugeValue = inclineOut
+      this.speedGaugeValueText = speedOut.toFixed(1) + "kph"
+      this.inclineGaugeValueText = inclineOut.toFixed(1) +'°'
+
+      var mode = this.tmParam.tmRunMode
+      switch(mode){
+        case 0:  //timeSpeed mode
+          if( lapTime < timeRef  ){
+            this.ctrlSpeed( speedOut, speedRef)
+            this.ctrlIncline(inclineOut, inclineRef)
+          } else {
+            this.tmJskStop()
+          }  
+          this.txtTmOutSpeed = "Out:"+ speedOut.toFixed(1) + "[km/h]"         
+          break
+        case 1:  // interval mode
+          // count == 8 rate to turn changable 
+          var periodT = ( tmTimeLow + tmTimeHigh ) 
+          var tmCount = 8
+
+
+          if(lapTime > ( periodT * tmCount )){
+            if (lapTime<((periodT*tmCount)+tmTimeLow)){
+              speedRef    = tmSpeedLow
+              inclineRef  = tmInclineLow
+            
+              if( Math.abs(speedRef - speedOut ) > 0.1)
+                this.ctrlSpeed(speedRef)
+              else if( Math.abs(inclineRef - inclineOut ) > 0.1)
+                this.ctrlIncline(inclineOut, inclineRef)
+
+            } else {
+             // stop running
+              this.tmJskStop()
+            }
+          }else{  
+            var i = 1
+            var nthTime =0
+            var alphaTime = 0
+            do{
+              nthTime = ( tmTimeHigh + tmTimeLow ) * i
+              alphaTime = lapTime - (tmTimeLow + tmTimeHigh ) * (i -1) 
+              i ++
+            }while( lapTime  > nthTime )
+
+            if( alphaTime < tmTimeLow ) {
+              speedRef = tmSpeedLow
+              this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
+              this.txtTmOutSpeed = "Time:"+ tmTimeLow + "[sec]"             
+            } else {
+              speedRef = tmSpeedHigh
+              this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
+              this.txtTmOutSpeed = "Time:"+ tmTimeHigh + "[sec]"             
+            }  
+            this.ctrlSpeed(speedRef)
+            this.ctrlIncline(inclineOut, inclineRef)
+          }  
+          break
+        case 2: // program mode
+          i = 0 ;
+          do{
+            tableTime = tmProgramTable[i][0]
+            i++
+          } while( lapTime > tableTime)
+    
+          speedRef   = tmProgramTable[i-1][1]
+          inclineRef = tmProgramTable[i-1][2]
+            
+          ( speedOut   > speedRef   ) ? funcIncSpeed()   : funcDecSpeed()
+          ( inclineOut > inclineRef ) ? funcIncIncline() : funcDecIncline()
+          break       // end of program mode
+        default:
+          console.log("ERR invalid intervalMode")
+          break
+        // get index max index not exceed tmTable
+      }  
+      if(tmState) setTimeout(this.tmCtrlLoop,2000)      
+    },
     tmJskStart:function(){
       this.$refs.stopWatch.tmStart()
-      this.speedGaugeValue = 10 * 0.25;
+      this.speedGaugeValue = 10 * 0.25
+ 
+      var mode = this.tmParam.tmRunMode
+      switch(mode){
+        case 0:  //timeSpeed mode
+          mode = this.tmParam.tmTimeSpeedMode * 1       
+          if(( 3 > mode ) && ( 0 <= mode ) ){
+            timeRef = this.tmParam.timeSpeed.tmTime[mode] * 60
+            speedRef = this.tmParam.timeSpeed.tmSpeed[mode] * 1
+            inclineRef = this.tmParam.timeSpeed.tmIncline[mode] * 1
+          } else {
+            console.log("ERR invalid timeSpeedMode")
+            break
+          }
+          var jskTime = timeRef / 60
+          if(jskTime < 10) var jskMin = '0'+jskTime
+          else                  jskMin = jskTime
+          this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"         
+          this.txtTmOutSpeed = "Out:"+ speedOut.toFixed(1) + "[km/h]"         
+          this.txtTmSetTime ="00:"+jskMin+":00:00"        
+          break
+        case 1:  // interval mode
+          mode = this.tmParam.tmIntervalMode
+          if(( 3 > mode ) && ( 0 <= mode ) ){
+            tmTimeHigh    = this.tmParam.interval.tmTimeHigh[mode]
+            tmTimeLow     = this.tmParam.interval.tmTimeLow[mode] 
+            tmSpeedHigh   = this.tmParam.interval.tmSpeedHigh[mode]
+            tmSpeedLow    = this.tmParam.interval.tmSpeedLow[mode]   
+            tmInclineHigh = this.tmParam.interval.tmInclineHigh[mode]
+            tmInclineLow  = this.tmParam.interval.tmInclineLow[mode]
+          } else {
+            console.log("ERR invalid intervalMode")
+          }
+          var totalTime = (((tmTimeHigh + tmTimeLow) * 8 )/60).toFixed(0)
+          this.txtTmSetTime ="00:"+totalTime+":00:00"        
+          break
+        case 2: // program mode
+          mode = this.tmParam.tmIntervalMode
+          switch(mode){
+            case 0:
+              var tmProgramTable  = this.tmParam.Program.program0
+              break
+            case 1:
+              var tmProgramTable  = this.tmParam.Program.program1
+              break
+            case 2:
+              var tmProgramTable  = this.tmParam.Program.program2
+              break
+            case 3:
+              var tmProgramTable  = this.tmParam.Program.program3
+              break
+            case 4:
+              var tmProgramTable  = this.tmParam.Program.program4
+              break
+            default:
+              console.log("ERR invalid intervalMode")
+              break
+          }
+          break       // end of program mode
+        default:
+          console.log("ERR invalid intervalMode")
+          break
+        // get index max index not exceed tmTable
+      }  
+
       var msg = '9:4:905:0.000e+0'  // start
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      this.writeCmd(msg)
+      tmState = 1
+      lapTime = 0
+      this.tmCtrlLoop();
     },
     tmJskStop:function(){
-      this.speedGaugeValue = 0;
+      tmState = 0
+      this.speedGaugeValue = 0
       this.$refs.stopWatch.tmStop()
       var msg = '9:4:905:1.000e+0'  // start
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      this.writeCmd(msg)
     },
     tmJskPause:function(){
+      tmState = 0
       this.$refs.stopWatch.tmReset()
-      this.speedGaugeValue = 0;
+      this.speedGaugeValue = 0
       var msg = '9:4:905:1.000e+0'  // start
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      this.writeCmd(msg)
     },
     tmJskSpeedUp:function(){
       this.speedGaugeValue = (this.speedGaugeValue)*1.0 + 1.0
       var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
       var msg =    "9:4:905:2.000e-0";
       console.log(msg)
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      this.writeCmd(msg)
     },  
     tmJskSpeedDown:function(){
       this.speedGaugeValue = (this.speedGaugeValue)*1.0 - 1.0
       var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
       var msg =    '9:4:905:3.000e-0'+ referIn.toExponential(3);
       console.log(msg)
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      this.writeCmd(msg)
     },
     tmJskInclineUp:function(){
-      this.inclineGaugeValue = 90;
-      var msg = '9:4:906:3.000e+0'  // start
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
-    },
-    tmJskInclineDown:function(){
-      this.inclineGaugeValue = 50;
-      var msg = '9:4:906:3.000e+0'  // start
-      port.write(msg, function(err) {
-        if (err) { return console.log('Error on write: ', err.message)}
-      })
+      //this.inclineGaugeValue = 0 
+      var msg = '9:4:905:7.000e+0'  // start
+      this.writeCmd(msg)
     },
 
+    tmJskInclineDown:function(){
+      //this.inclineGaugeValue = 0;
+      var msg = '9:4:905:8.000e+0'  // incline
+      this.writeCmd(msg)
+    },
+
+    tmJskInclineStop:function(){
+      //this.inclineGaugeValue = 50;
+      var msg = '9:4:905:6.000e+0'  // incline
+      this.writeCmd(msg)
+    },
     ...mapActions([
       'calculateColorLuminance',
       'updateDefaultCaptionSettings',

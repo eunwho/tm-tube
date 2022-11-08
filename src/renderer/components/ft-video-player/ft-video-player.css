@@ -28,10 +28,14 @@
   font-size: 50px;
 
   top:880px;
-  left:1650px;
+  left:1680px;
 
   background-color: rgba(0,0,0,0.3);
   z-index: -1;
+}
+.svgSpeedKPH{
+  top:920px;
+  left:1620px;
 }
 .tmJskInclineGauge {
   top:680px;
@@ -49,7 +53,7 @@
   font-size: 50px;
 
   top:880px;
-  left:155px;
+  left:145px;
 
   background-color: rgba(0,0,0,0.3);
   z-index: -1;

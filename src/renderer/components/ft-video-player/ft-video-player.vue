@@ -87,6 +87,7 @@
       <div class="tmJskDashBoard tmJskSetTime">{{txtTmSetTime}}</div>
       <div class="tmJskDashBoard tmStopWatch">
       <div class="svgSpeedValueText">{{speedGaugeValueText}}</div>
+      <div class="svgSpeedValueText svgSpeedKPH">[km/hour]</div>
       <div class="svgInclineValueText">{{inclineGaugeValueText}}</div>
       <stopwatch
         ref="stopWatch"

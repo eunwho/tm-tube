@@ -173,8 +173,8 @@ export default Vue.extend({
       tmParam:[],
       speedGaugeValue: 0,
       inclineGaugeValue: 0,
-      speedGaugeValueText:0,
-      inclineGaugeValueText:0,
+      speedGaugeValueText:"00.0",
+      inclineGaugeValueText:"00.0°",
       rxData:'',
       txtTmSetSpeed:"Set: 0[km/h]",
       txtTmOutSpeed:"Out: 0[km/h]",
@@ -2113,7 +2113,13 @@ export default Vue.extend({
       //this.inclineGaugeValue = 50;
       var msg = '9:4:905:6.000e+0'  // incline
       this.writeCmd(msg)
+
+      setTimeout(()=> {
+        msg= '9:4:910:0.000e+0'
+        this.writeCmd(msg)
+      },200)
     },
+
     ...mapActions([
       'calculateColorLuminance',
       'updateDefaultCaptionSettings',

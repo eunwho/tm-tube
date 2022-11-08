@@ -66,7 +66,7 @@
           :min="0"
           :max="20"
           gauge-color="darkgreen"
-          :scale-interval="1.0"
+          :scale-interval="2.0"
           />
 
         </div>     
@@ -77,9 +77,9 @@
           :value="inclineGaugeValue"
           :separator-step="0"
           :min="0"
-          :max="20"
+          :max="10"
           gauge-color="gold"
-          :scale-interval="2"
+          :scale-interval="1"
           />
       </div>
       <div class="tmJskDashBoard tmJskSetSpeed">{{txtTmSetSpeed}}</div>

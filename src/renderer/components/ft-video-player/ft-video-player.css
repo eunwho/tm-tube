@@ -30,7 +30,7 @@
   top:880px;
   left:1680px;
 
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.0);
   z-index: -1;
 }
 .svgSpeedKPH{
@@ -55,7 +55,7 @@
   top:880px;
   left:145px;
 
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.0);
   z-index: -1;
 }
 .tmJskButton {

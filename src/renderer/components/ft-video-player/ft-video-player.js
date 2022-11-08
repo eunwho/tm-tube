@@ -29,7 +29,8 @@ const TM_STOP = 0
 var tmState =0
 var lapTime = 0
 var timeRef = 0
-var RefToKPH = 10.0 // 1.0  to km / hour  
+//var RefToKPH = 10.0 // small treadmill 1.0  to km / hour    
+var RefToKPH = 12.5 // 1.0  to km / hour  
 var speedOut   = 0  
 var speedRef   = 0  
 var inclineOut = 0
@@ -1834,16 +1835,19 @@ export default Vue.extend({
       this.writeCmd(msg)
     },
 
-    ctrlIncline : function(Out, Ref ){
-/*
-      var msg = '9:4:905:1.000e+0'
-      if     (( Ref - Out) > 0.1 ) msg = '9:4:905:6.000e+0' // speedup
-      else if(( Ref - Out) > 0.01) msg = '9:4:905:7.000e+0' // speedup1
-      else if(( Ref - Out) > 0.0 ) msg = '9:4:900:0.000e+0' // speedup1
-      else if(( Ref - Out) > -0.1) msg = '9:4:905:8.000e+0' // speeddown1
-      else                         msg = '9:4:905:9.000e+0' // speeddown
+    ctrlMonitor : function(  ){
+      var msg = '9:4:900:0.000e-0'
       this.writeCmd(msg)
-*/
+    },
+
+    ctrlIncline : function(Ref ){
+      if(( 0 <= Ref ) && ( Ref <= 10 )){
+        var sciCmd = '9:4:904:'
+        var codeData = Ref.toExponential(3) 
+        var msg = sciCmd + codeData;
+        console.log("tx msg =",msg)
+        this.writeCmd(msg)
+      }
     },
 
     tmCtrlLoop: function(){
@@ -1912,22 +1916,21 @@ export default Vue.extend({
         graphData.Graph1= ((( msb + lsb ) - 2048 ) / 409.6) * 4
         
         inclineOut = graphData.Graph1
-        console.log("inclineOut = ", inclineOut)        
-
         speedOut = graphData.Ref * RefToKPH
-        // inclineOut = 0                        // debug jsk      
       })
       this.speedGaugeValue = speedOut
       this.inclineGaugeValue = inclineOut
-      this.speedGaugeValueText = speedOut.toFixed(1) + "kph"
+      this.speedGaugeValueText = speedOut.toFixed(1)
       this.inclineGaugeValueText = inclineOut.toFixed(1) +'°'
 
       var mode = this.tmParam.tmRunMode
       switch(mode){
         case 0:  //timeSpeed mode
           if( lapTime < timeRef  ){
-            this.ctrlSpeed( speedOut, speedRef)
-            this.ctrlIncline(inclineOut, inclineRef)
+            if( Math.abs(speedOut - speedRef ) > 0.1 )     this.ctrlSpeed( speedRef)
+            else if( Math.abs(inclineOut - inclineRef)> 0.1 ) this.ctrlIncline(inclineRef)
+            else this.ctrlMonitor()
+            
           } else {
             this.tmJskStop()
           }  
@@ -1937,8 +1940,6 @@ export default Vue.extend({
           // count == 8 rate to turn changable 
           var periodT = ( tmTimeLow + tmTimeHigh ) 
           var tmCount = 8
-
-
           if(lapTime > ( periodT * tmCount )){
             if (lapTime<((periodT*tmCount)+tmTimeLow)){
               speedRef    = tmSpeedLow
@@ -1947,7 +1948,7 @@ export default Vue.extend({
               if( Math.abs(speedRef - speedOut ) > 0.1)
                 this.ctrlSpeed(speedRef)
               else if( Math.abs(inclineRef - inclineOut ) > 0.1)
-                this.ctrlIncline(inclineOut, inclineRef)
+                this.ctrlIncline(inclineRef)
 
             } else {
              // stop running
@@ -1972,8 +1973,10 @@ export default Vue.extend({
               this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
               this.txtTmOutSpeed = "Time:"+ tmTimeHigh + "[sec]"             
             }  
-            this.ctrlSpeed(speedRef)
-            this.ctrlIncline(inclineOut, inclineRef)
+            if( Math.abs(speedRef - speedOut ) > 0.1)
+                this.ctrlSpeed(speedRef)
+            else if( Math.abs(inclineRef - inclineOut ) > 0.1)
+              this.ctrlIncline(inclineRef)
           }  
           break
         case 2: // program mode
@@ -1996,6 +1999,7 @@ export default Vue.extend({
       }  
       if(tmState) setTimeout(this.tmCtrlLoop,2000)      
     },
+
     tmJskStart:function(){
       this.$refs.stopWatch.tmStart()
       this.speedGaugeValue = 10 * 0.25
@@ -2084,29 +2088,19 @@ export default Vue.extend({
       this.writeCmd(msg)
     },
     tmJskSpeedUp:function(){
-      this.speedGaugeValue = (this.speedGaugeValue)*1.0 + 1.0
-      var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
-      var msg =    "9:4:905:2.000e-0";
-      console.log(msg)
-      this.writeCmd(msg)
+      speedRef = (speedRef < 19 ) ? speedRef + 1 : 20
+      this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
     },  
     tmJskSpeedDown:function(){
-      this.speedGaugeValue = (this.speedGaugeValue)*1.0 - 1.0
-      var referIn = ((this.speedGaugeValue) * 1.0) / 10.0 
-      var msg =    '9:4:905:3.000e-0'+ referIn.toExponential(3);
-      console.log(msg)
-      this.writeCmd(msg)
+      speedRef = (speedRef > 1 ) ? speedRef - 1 : 0
+      this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
     },
     tmJskInclineUp:function(){
-      //this.inclineGaugeValue = 0 
-      var msg = '9:4:905:7.000e+0'  // start
-      this.writeCmd(msg)
+      inclineRef = (inclineRef < 9 ) ? inclineRef + 1 : 10
     },
 
     tmJskInclineDown:function(){
-      //this.inclineGaugeValue = 0;
-      var msg = '9:4:905:8.000e+0'  // incline
-      this.writeCmd(msg)
+      inclineRef = (inclineRef > 1 ) ? inclineRef - 1 : 0
     },
 
     tmJskInclineStop:function(){

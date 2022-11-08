@@ -26,7 +26,7 @@
           <ft-slider
               :label="$t('Treadmill.TimeSpeed.Set Speed Beginner')"
               :default-value="getSpeed_TimeSpeed_Beginner"
-              :min-value="1"
+              :min-value="5"
               :max-value="20"
               :step="1"
               value-extension="km/hour"
@@ -36,7 +36,7 @@
               :label="$t('Treadmill.TimeSpeed.Set Incline Beginner')"
               :default-value="getIncline_TimeSpeed_Beginner"
               :min-value="0"
-              :max-value="5"
+              :max-value="10"
               :step="1"
               value-extension='°'
               @change="updateIncline_TimeSpeed_Beginner"
@@ -58,7 +58,7 @@
     <ft-slider
         :label="$t('Treadmill.TimeSpeed.Set Speed Normal')"
         :default-value="getSpeed_TimeSpeed_Normal"
-        :min-value="1"
+        :min-value="5"
         :max-value="20"
         :step="1"
         value-extension="km/hour"
@@ -68,7 +68,7 @@
         :label="$t('Treadmill.TimeSpeed.Set Incline Normal')"
         :default-value="getIncline_TimeSpeed_Normal"
         :min-value="0"
-        :max-value="5"
+        :max-value="10"
         :step="1"
         value-extension='°'
         @change="updateIncline_TimeSpeed_Normal"
@@ -90,7 +90,7 @@
         <ft-slider
             :label="$t('Treadmill.TimeSpeed.Set Speed Pro')"
             :default-value="getSpeed_TimeSpeed_Pro"
-            :min-value="1"
+            :min-value="5"
             :max-value="20"
             :step="1"
             value-extension="km/hour"
@@ -100,7 +100,7 @@
             :label="$t('Treadmill.TimeSpeed.Set Incline Pro')"
             :default-value="getIncline_TimeSpeed_Pro"
             :min-value="0"
-            :max-value="5"
+            :max-value="10"
             :step="1"
             value-extension='°'
             @change="updateIncline_TimeSpeed_Pro"
@@ -143,7 +143,7 @@
     <ft-slider
         :label="$t('Treadmill.Interval.Interval LowSpeed')"
         :default-value="getSpeedLow_Interval"
-        :min-value="4"
+        :min-value="5"
         :max-value="15"
         :step="1"
         value-extension="(km/hour)"
@@ -152,7 +152,7 @@
     <ft-slider
         :label="$t('Treadmill.Interval.Interval HighSpeed')"
         :default-value="getSpeedHigh_Interval"
-        :min-value="10"
+        :min-value="5"
         :max-value="20"
         :step="1"
         value-extension="(km/hour)"
@@ -161,8 +161,8 @@
     <ft-slider
         :label="$t('Treadmill.Interval.Interval LowIncline')"
         :default-value="getInclineLow_Interval"
-        :min-value="10"
-        :max-value="20"
+        :min-value="0"
+        :max-value="10"
         :step="1"
         value-extension='°'
         @change="updateInclineLow_Interval"
@@ -171,8 +171,8 @@
     <ft-slider
         :label="$t('Treadmill.Interval.Interval HighIncline')"
         :default-value="getInclineHigh_Interval"
-        :min-value="10"
-        :max-value="20"
+        :min-value="0"
+        :max-value="10"
         :step="1"
         value-extension='°'
         @change="updateInclineHigh_Interval"

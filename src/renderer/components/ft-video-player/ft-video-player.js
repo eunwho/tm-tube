@@ -42,7 +42,7 @@ const {SerialPort} = require('serialport')
 
 const {InterByteTimeoutParser} = require('@serialport/parser-inter-byte-timeout')
 //const port = new SerialPort({ path: '/dev/ttyS0', baudRate: 115200 })
-const port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 115200 })
+const port = new SerialPort({ path: '/dev/ttyUSB1', baudRate: 115200 })
 const parser = port.pipe(new InterByteTimeoutParser({ interval: 50}))
 
 if(port){
@@ -1836,7 +1836,7 @@ export default Vue.extend({
     },
 
     ctrlMonitor : function(  ){
-      var msg = '9:4:900:0.000e-0'
+      var msg = "9:4:900:0.000e+0"
       this.writeCmd(msg)
     },
 
@@ -1928,8 +1928,8 @@ export default Vue.extend({
         case 0:  //timeSpeed mode
           if( lapTime < timeRef  ){
             if( Math.abs(speedOut - speedRef ) > 0.1 )     this.ctrlSpeed( speedRef)
-            else if( Math.abs(inclineOut - inclineRef)> 0.1 ) this.ctrlIncline(inclineRef)
             else this.ctrlMonitor()
+            if( Math.abs(inclineOut - inclineRef)> 0.1 ) this.ctrlIncline(inclineRef)
             
           } else {
             this.tmJskStop()
@@ -1945,11 +1945,10 @@ export default Vue.extend({
               speedRef    = tmSpeedLow
               inclineRef  = tmInclineLow
             
-              if( Math.abs(speedRef - speedOut ) > 0.1)
-                this.ctrlSpeed(speedRef)
-              else if( Math.abs(inclineRef - inclineOut ) > 0.1)
-                this.ctrlIncline(inclineRef)
+              if( Math.abs(speedRef - speedOut ) > 0.1) this.ctrlSpeed(speedRef)
+              else this.ctrlMonitor()
 
+              if( Math.abs(inclineRef - inclineOut ) > 0.1)this.ctrlIncline(inclineRef)
             } else {
              // stop running
               this.tmJskStop()
@@ -1966,17 +1965,19 @@ export default Vue.extend({
 
             if( alphaTime < tmTimeLow ) {
               speedRef = tmSpeedLow
+              inclineRef = tmInclineLow
               this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
               this.txtTmOutSpeed = "Time:"+ tmTimeLow + "[sec]"             
             } else {
               speedRef = tmSpeedHigh
+              inclineRef = tmInclineHigh
               this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
               this.txtTmOutSpeed = "Time:"+ tmTimeHigh + "[sec]"             
             }  
-            if( Math.abs(speedRef - speedOut ) > 0.1)
-                this.ctrlSpeed(speedRef)
-            else if( Math.abs(inclineRef - inclineOut ) > 0.1)
-              this.ctrlIncline(inclineRef)
+
+            if( Math.abs(speedRef - speedOut ) > 0.1) this.ctrlSpeed(speedRef)
+            else this.ctrlMonitor()
+            if( Math.abs(inclineRef - inclineOut ) > 0.1) this.ctrlIncline(inclineRef)
           }  
           break
         case 2: // program mode
@@ -2088,18 +2089,29 @@ export default Vue.extend({
       this.writeCmd(msg)
     },
     tmJskSpeedUp:function(){
+      if( speedRef > 19 ) return
+      if( Math.abs(speedRef - tmSpeedLow )<0.5) tmSpeedLow = tmSpeedLow + 1
+      else if ( Math.abs(speedRef - tmSpeedHigh) < 0.5 )  tmSpeedHigh = tmSpeedHigh + 1    
       speedRef = (speedRef < 19 ) ? speedRef + 1 : 20
       this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
     },  
     tmJskSpeedDown:function(){
+      if(speedRef < 6 ) return
+      if( Math.abs(speedRef - tmSpeedLow )<0.5) tmSpeedLow = tmSpeedLow - 1
+      else if ( Math.abs(speedRef - tmSpeedHigh) < 0.5 )  tmSpeedHigh = tmSpeedHigh - 1    
       speedRef = (speedRef > 1 ) ? speedRef - 1 : 0
       this.txtTmSetSpeed = "Set:"+ speedRef.toFixed(1) + "[km/h]"        
     },
     tmJskInclineUp:function(){
+      if ( inclineRef > 9 ) return 
+      if( Math.abs(inclineRef - tmInclineLow )<0.2) tmInclineLow = tmInclineLow + 1
+      else if ( Math.abs(inclineRef - tmInclineHigh) < 0.2 )  tmInclineHigh = tmInclineHigh + 1    
       inclineRef = (inclineRef < 9 ) ? inclineRef + 1 : 10
     },
-
     tmJskInclineDown:function(){
+      if ( inclineRef < 1 ) return 
+      if( Math.abs(inclineRef - tmInclineLow )<0.2) tmInclineLow = tmInclineLow - 1
+      else if ( Math.abs(inclineRef - tmInclineHigh) < 0.2 )  tmInclineHigh = tmInclineHigh - 1    
       inclineRef = (inclineRef > 1 ) ? inclineRef - 1 : 0
     },
 

@@ -1,6 +1,4 @@
-
 // sudo dmesg | grep tty
-
 import Vue from 'vue'
 import { mapActions} from 'vuex'
 import FtCard from '../ft-card/ft-card.vue'
@@ -22,6 +20,7 @@ import stopwatch from '../stopwatch/stopwatch.vue'
 import { VueSvgGauge } from 'vue-svg-gauge'
 
 import { contextIsolated } from 'process'
+import { toPath } from 'lodash'
 
 const TM_RUN = 1
 const TM_STOP = 0
@@ -606,7 +605,6 @@ export default Vue.extend({
             this.transformAndInsertCaptions()
           }
         })
-
         this.player.on('ended', () => {
           this.$emit('ended')
 
@@ -614,7 +612,6 @@ export default Vue.extend({
             navigator.mediaSession.playbackState = 'none'
           }
         })
-
         this.player.on('error', (error, message) => {
           this.$emit('error', error.target.player.error_)
 
@@ -622,7 +619,6 @@ export default Vue.extend({
             navigator.mediaSession.playbackState = 'none'
           }
         })
-
         this.player.on('play', async function () {
           if ('mediaSession' in navigator) {
             navigator.mediaSession.playbackState = 'playing'
@@ -634,7 +630,6 @@ export default Vue.extend({
               await ipcRenderer.invoke(IpcChannels.START_POWER_SAVE_BLOCKER)
           }
         })
-
         this.player.on('pause', function () {
           if ('mediaSession' in navigator) {
             navigator.mediaSession.playbackState = 'paused'
@@ -646,7 +641,6 @@ export default Vue.extend({
             this.powerSaveBlocker = null
           }
         })
-
         this.player.on(this.statsModalEventName, () => {
           if (this.showStatsModal) {
             this.statsModal.open()
@@ -656,7 +650,6 @@ export default Vue.extend({
             this.statsModal.close()
           }
         })
-
         this.player.on('timeupdate', () => {
           if (this.format === 'dash') {
             this.playerStats = this.player.tech({ IWillNotUseThisInPlugins: true }).vhs.stats
@@ -2036,8 +2029,11 @@ export default Vue.extend({
           } else {
             console.log("ERR invalid intervalMode")
           }
-          var totalTime = (((tmTimeHigh + tmTimeLow) * 8 )/60).toFixed(0)
-          this.txtTmSetTime ="00:"+totalTime+":00:00"        
+          var totalTime = (tmTimeHigh + tmTimeLow) * 8 + tmTimeLow 
+          var totalMinTime = (((tmTimeHigh + tmTimeLow) * 8 + tmTimeLow )/60).toFixed(0)
+          var totalSecTime = (totalTime - totalMinTime * 60 )
+          if(totalSecTime < 10 ) totalSecTime = "0"+totalSecTime 
+          this.txtTmSetTime ="00:"+totalMinTime+":"+totalSecTime+ ":00"        
           break
         case 2: // program mode
           mode = this.tmParam.tmIntervalMode

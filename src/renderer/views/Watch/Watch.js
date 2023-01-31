@@ -1292,8 +1292,9 @@ export default Vue.extend({
     },
 
     updateTitle: function () {
-      document.title = `${this.videoTitle} - FreeTube`
-    },
+//      document.title = `${this.videoTitle} - FreeTube`
+      document.title = `${this.videoTitle} - eunwho.duckdns.org`
+},
 
     ...mapActions([
       'showToast',

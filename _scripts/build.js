@@ -51,9 +51,9 @@ const config = {
   },
   protocols: [
     {
-      name: "FreeTube",
+      name: "tm-tube",
       schemes: [
-        "freetube"
+        "tm-tube"
       ]
     }
   ],

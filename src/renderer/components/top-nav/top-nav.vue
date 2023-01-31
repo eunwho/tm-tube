@@ -56,12 +56,8 @@
         @keydown.space.prevent="navigate('subscriptions')"
         @keydown.enter.prevent="navigate('subscriptions')"
       >
-        <div
-          class="logoIcon"
-        />
-        <div
-          class="logoText"
-        />
+      eunwho.duckdns.org
+
       </div>
     </div>
     <div class="middle">

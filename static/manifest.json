@@ -1,11 +1,11 @@
 {
 	"dir" : "ltr",
 	"lang" : "de",
-	"name" : "FreeTube",
+	"name" : "Eunwho P.E.",
 	"scope" : "/",
 	"display" : "standalone",
 	"start_url" : "https://app.freetubeapp.io/",
-	"short_name" : "FreeTube",
+	"short_name" : "runTube",
 	"theme_color" : "transparent",
 	"description" : "A description",
 	"orientation" : "any",

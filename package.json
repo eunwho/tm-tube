@@ -1,24 +1,22 @@
 {
-  "name": "freetube",
-  "productName": "FreeTube",
-  "description": "A private YouTube client",
-  "version": "0.17.1",
+  "name": "tm-tube",
+  "productName": "eunwho.duckdns.org",
+  "description": "treadmill YouTube client",
+  "version": "0.0.1",
   "license": "AGPL-3.0-or-later",
   "main": "./dist/main.js",
   "private": true,
   "author": {
-    "name": "PrestonN",
-    "email": "FreeTubeApp@protonmail.com",
-    "url": "https://github.com/FreeTubeApp/FreeTube"
+    "name": "S.K.Jung",
+    "email": "eunwho@naver.com",
+    "url": "http://eunwho.duckdns.org/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FreeTubeApp/FreeTube.git"
-  },
-  "bugs": {
-    "url": "https://github.com/FreeTubeApp/FreeTube/issues"
+    "url": "git+https://github.com/eunwho/tm-tube.git"
   },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps", 
     "build": "run-s rebuild:electron pack build-release",
     "build:arm64": "run-s rebuild:electron pack build-release:arm64",
     "build:arm32": "run-s rebuild:electron pack build-release:arm32",

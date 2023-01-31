@@ -7,10 +7,8 @@ import FtRadioButton from '../../components/ft-radio-button/ft-radio-button.vue'
 import FtButton from '../../components/ft-button/ft-button.vue'
 //import {tmParameter} from '../../store/modules/utils.js'
 
-
 import fs from 'fs'
 import path from 'path'
-
 
 const fileLocation = './eunwhoPE.json.bk'
 const fileLocation1 = './eunwhoPE.json'
@@ -98,7 +96,6 @@ export default Vue.extend({
   },
   data: function () {
     return {
-
       tmRunMode:        tmParam.tmRunMode,
       tmTimeSpeedMode:  tmParam.tmTimeSpeedMode,
       tmIntervalMode:   tmParam.tmIntervalMode,
